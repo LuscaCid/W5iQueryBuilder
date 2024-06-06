@@ -1,13 +1,18 @@
 # W5IQueryBuilder
 
-## Summary
-Um simples query builder para padronizar a montagem de queries, deixando o código mais organizado e limpo, e permitindo que as consultas sejam feitas de forma mais padronizada.
+## Instalacao
 
-## Author
+Para usar num projeto adiantiFramework: Basta apenas copiar a pasta QueryBuilder alocar no util do projeto e então, se divirta!  
+
+## Summary
+Um simples query builder para padronizar a montagem de queries, deixando o código mais organizado e limpo, e permitindo que as consultas sejam feitas de forma mais padronizada, podendo tanto ser usado em ambiente AdiantiFramework quanto num projeto qualquer, apenas acessando src/config/DataSource.php e passar o boolean 'true' para a propriedade "isAdiantiFrameworkProject" caso seja e 'false' caso não.
+
+
+## Autor
 Lucas Felipe Lima Cid  
 <lucasfelipaaa@gmail.com>
 
-## Created
+## Criado em:
 04/06/2024
 
 ## Classe W5IQueryBuilder

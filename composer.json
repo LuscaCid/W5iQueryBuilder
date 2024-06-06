@@ -1,0 +1,17 @@
+{
+    "name": "luscacid/query-builder",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "QueryBuilder\\": "src/QueryBuilder"
+        }
+    },
+    "authors": [
+        {
+            "name": "lucas cid",
+            "email": "lucasfelipaaa@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

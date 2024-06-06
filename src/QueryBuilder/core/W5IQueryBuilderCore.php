@@ -33,7 +33,7 @@ abstract class W5IQueryBuilderCore extends W5IQueryBuilderHelpers
             $pdo = $instance->PDO;
 
             $stmt = $pdo->prepare($this->query);
-            if(isset($this->bindValues) && is_array($this->bindValues)) 
+            if(isset($this->bindValues) && is_array($this->bindValues) && !empty($this->bindValues)) 
             {
                 foreach($this->bindValues as $bind) 
                 {   
@@ -86,7 +86,7 @@ abstract class W5IQueryBuilderCore extends W5IQueryBuilderHelpers
             }
 
             $stmt = $pdo->prepare($this->query);
-            if(isset($this->bindValues) && is_array($this->bindValues)) 
+            if(isset($this->bindValues) && is_array($this->bindValues) && !empty($this->bindValues)) 
             {
                 foreach($this->bindValues as $bind) 
                 {   

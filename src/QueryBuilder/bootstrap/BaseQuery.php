@@ -36,31 +36,7 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     protected function buildWhere() {
         //adicionar logica pois ele concatena passando um and para cada where, mas se for um or por exemplo, dá erro 
 
-        if(count($this->where) == 1)
-        {
-            return " WHERE " . implode(" ", $this->where) . " ";
-        }
-        else if (count($this->where) > 1)
-        {
-            $wheresFormatted = array_map(function ($where) 
-            {
-                $alreadyContainsWhere = false;
-                if(str_contains(strtoupper($where), "AND") || str_contains(strtolower($where), "OR") ) 
-                {
-                    return $where;
-                }
-                else if(str_contains(strtoupper($where), "WHERE") )
-                {
-                    if($alreadyContainsWhere) 
-                    {
-                        return str_replace("WHERE", "AND" ,strtoupper($where));
-                    }
-                    $alreadyContainsWhere = TRUE;  
-                }               
-            },  $this->where);
-            return implode (" ", $wheresFormatted);
-        }
-        
+        //verificar em cada string de where se NAO ha aS clausulaS AND, OR, LIKE, ILIKE, E NESTES ADICIONAR O AND
         return empty($this->where) ? ' ' : 'WHERE ' . implode(' AND ', $this->where);
     }
 

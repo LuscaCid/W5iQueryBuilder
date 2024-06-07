@@ -23,7 +23,27 @@ class WhereClauses
         $this->bindValues[]= ["$bind._start" => $start];
         $this->bindValues[]= ["$bind._end" => $end];
        
-        return " WHERE $column BETWEEN :$column._start AND :$bind._end ";
+        return "  $column BETWEEN :$column._start AND :$bind._end ";
+    }
+    public function andWhereBetween($column, $start, $end)
+    {
+        //binded column : serve para realizar a remocao de um possivel alias
+        $bind = $this->cutBindColumn($column);
+
+        $this->bindValues[]= ["$bind._start" => $start];
+        $this->bindValues[]= ["$bind._end" => $end];
+       
+        return " AND $column BETWEEN :$column._start AND :$bind._end ";
+    }
+    public function orWhereBetween($column, $start, $end)
+    {
+        //binded column : serve para realizar a remocao de um possivel alias
+        $bind = $this->cutBindColumn($column);
+
+        $this->bindValues[]= ["$bind._start" => $start];
+        $this->bindValues[]= ["$bind._end" => $end];
+       
+        return " OR $column BETWEEN :$column._start AND :$bind._end ";
     }
     public function whereIn(string $column, array $items) 
     {
@@ -41,9 +61,16 @@ class WhereClauses
         
         return " AND $column IN ( $placeholders ) ";
     }
+    public function orWhereIn(string $column, array $items) 
+    {
+        $placeholders = implode(",", array_fill(0, count($items), "?"));
+
+        $this->placeholderValues = array_merge($this->placeholderValues, $items );
+        
+        return " OR $column IN ( $placeholders ) ";
+    }
     public function whereNotIn(string $column, array $items) 
     {
-        //literalmente construindo uma string com placeholders de arcordo com  aquantudade q=e  placeholders
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
@@ -110,8 +137,5 @@ class WhereClauses
         $this->bindValues[]= [$bind => $value];
 
         return " OR ".$column." ILIKE " . " :$bind " ;
-
     }
-
-   
 }

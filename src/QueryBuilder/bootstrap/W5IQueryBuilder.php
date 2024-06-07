@@ -1,11 +1,10 @@
 <?php
 namespace QueryBuilder\bootstrap;
 
-
 use Adianti\Database\TRecord;
 use Adianti\Database\TTransaction;
 use Exception;
-use QueryBuilder\wheres\W5IQuerybBuilderWhereClauses;
+use QueryBuilder\clauses\wheres\W5IQuerybBuilderWhereClauses;
 
 /**
  * @summary : Um simples query builder para padronizar montagem de queries, deixando mais organizado, codigo limpo, para ter consultas sendo feitas de forma mais padronizada

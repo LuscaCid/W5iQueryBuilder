@@ -1,10 +1,9 @@
 <?php
-namespace QueryBuilder\wheres;
+namespace QueryBuilder\clauses;
 
-use Exception;
-use QueryBuilder\core\W5IQueryBuilderCore;
+use QueryBuilder\bootstrap\BaseQuery;
 
-abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
+class WhereClauses extends BaseQuery
 {
 
     public function andWhereIn(string $column, array $items) 
@@ -12,7 +11,7 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
-        $this->query .= " AND $column IN ( $placeholders ) ";
+        $this->where[] = " AND $column IN ( $placeholders ) ";
 
         return $this;
     }
@@ -22,7 +21,7 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
-        $this->query .= " WHERE $column NOT IN ( $placeholders ) ";
+        $this->where[] = " $column NOT IN ( $placeholders ) ";
 
         return $this;
         
@@ -33,7 +32,7 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->query.= " AND " .$column. " ".$operator. " ". " :$bind ";
+        $this->where[]= " AND " .$column. " ".$operator. " ". " :$bind ";
         return $this;
     }
     public function orWhere(string $column, string $operator, string $value) 
@@ -42,24 +41,23 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->query.= " OR ". " $column " .$operator. " ". " :$bind ";
+        $this->where[]= " OR ". " $column " .$operator. " ". " :$bind ";
         return $this;
     }
     public function where(string $column, string $operator, string $value) 
     {
-        $this->verifyIfAlreadyHasClauseWhere($this->query) && throw new Exception("A cláusula WHERE já esta presente na string, substitua por um andWhere ou orWhere, etc.");
 
         $bind = $this->cutBindColumn($column);
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->query.= " WHERE ".$column." ".$operator. " " . ":$bind" ." ";
+        $this->where[]= " WHERE ".$column." ".$operator. " " . ":$bind" ." ";
         return $this;
     }
     public function andWhereLike (string $column, $value) 
     {
         $this->bindValues[]= [$column => $value];
-        $this->query .= $this->verifyIfAlreadyHasClauseWhere($this->query) ? " AND ".$column." LIKE " . " :$column " : " WHERE ".$column." LIKE " . " :$column " ;
+        $this->where[]= " AND ".$column." LIKE " . " :$column ";
 
         return $this;
     }
@@ -69,7 +67,7 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->query .= $this->verifyIfAlreadyHasClauseWhere($this->query) ? " AND ".$column." ILIKE " . " :$column " : " WHERE ".$column." ILIKE " . " :$bind " ;
+        $this->where[]= " AND ".$column." ILIKE " . " :$column ";
 
         return $this;
     }
@@ -80,7 +78,7 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->query .= $this->verifyIfAlreadyHasClauseWhere($this->query) ? " OR ".$column." LIKE " . " :$column " : " WHERE ".$column." LIKE " . " :$bind " ;
+        $this->where[]= " OR ".$column." LIKE " . " :$column ";
 
         return $this;
     }
@@ -90,8 +88,20 @@ abstract class W5IQuerybBuilderWhereClauses extends W5IQueryBuilderCore
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->query .= $this->verifyIfAlreadyHasClauseWhere($this->query) ? " OR ".$column." ILIKE " . " :$column " : " WHERE ".$column." ILIKE " . " :$bind " ;
+        $this->where[]= " OR ".$column." ILIKE " . " :$column " ;
 
         return $this;
+    }
+
+    protected function cutBindColumn(string $bindColumn) 
+    {
+        if(str_contains($bindColumn, ".")) 
+        {
+            $dotPosition = strpos($bindColumn, ".");
+            //deve retornar toda a string apos o '.' para criar o bindColumn
+            $bindColumn = substr($bindColumn, $dotPosition + 1);
+            return $bindColumn;
+        }
+        return $bindColumn;
     }
 }

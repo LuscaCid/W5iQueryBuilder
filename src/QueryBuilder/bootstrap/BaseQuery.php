@@ -6,9 +6,6 @@ use QueryBuilder\core\W5IQueryBuilderCore;
 
 abstract class BaseQuery extends W5IQueryBuilderCore
 {
-    protected $bindValues = [];
-    protected $placeholderValues;
-    protected $placeholders;
     protected $select = [];
     protected $tables = [];
     protected $where = [];
@@ -35,11 +32,24 @@ abstract class BaseQuery extends W5IQueryBuilderCore
      */
     protected function buildWhere() {
         //adicionar logica pois ele concatena passando um and para cada where, mas se for um or por exemplo, dá erro 
-
+        $whereClausesFormatted = [];
+        if(!empty($this->where)) 
+        {
+            foreach ($this->where as $key => $value)
+            {
+                $contains = str_contains(strtoupper($value), "AND") || str_contains(strtoupper($value), "OR");
+                if(!$contains && $key > 0) 
+                {
+                    $whereClausesFormatted[] = " AND $value ";
+                    continue;
+                }
+                $whereClausesFormatted[] = $value;
+            }
         //verificar em cada string de where se NAO ha aS clausulaS AND, OR, LIKE, ILIKE, E NESTES ADICIONAR O AND
-        return empty($this->where) ? ' ' : 'WHERE ' . implode(' AND ', $this->where);
+            return ' WHERE ' . implode(' ', $whereClausesFormatted);
+        }
+        return  ' '; 
     }
-
     protected function buildJoin() {
         return !empty($this->join) ? implode(' ', $this->join) : "";
     }
@@ -68,7 +78,7 @@ abstract class BaseQuery extends W5IQueryBuilderCore
         $sql  = ' SELECT ' . $this->buildSelect();
         $sql .= ' FROM ' . $this->buildFrom();
         $sql .= ' ' .      $this->buildJoin();
-        $sql .= ' WHERE '. $this->buildWhere();
+        $sql .= ' '      . $this->buildWhere();
         $sql .= ' ' .      $this->buildGroupBy();
         $sql .= ' ' .      $this->buildHaving();
         $sql .= ' ' .      $this->buildOrderBy();

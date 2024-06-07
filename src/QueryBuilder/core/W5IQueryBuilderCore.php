@@ -12,6 +12,7 @@ abstract class W5IQueryBuilderCore
     private bool $isAdiantiFrameworkProject ;
     protected array $placeholderValues = [];
     protected array $bindValues = [] ; 
+    protected array $placeholders = [] ;
     protected string $tableName;
     protected string $transactionUnit;
     

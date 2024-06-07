@@ -56,17 +56,17 @@ class QueryBuilder extends BaseQuery
     }
     public function where(string $column, string $operator, string $value) 
     {
-        $this->where[] = $this->where[]=$this->whereClauses->where($column, $operator, $value);
+        $this->where[] = $this->whereClauses->where($column, $operator, $value);
         return $this;
     }
     public function whereBetween($column, $start, $end) 
     {
-        $this->where[] = $this->where[]=$this->whereClauses->whereBetween($column, $start, $end);
+        $this->where[] = $this->whereClauses->whereBetween($column, $start, $end);
         return $this;
     }
     public function whereIn($column, array $values) 
     {
-        $this->where[] = $this->where[]=$this->whereClauses->whereIn($column, $values);
+        $this->where[] = $this->whereClauses->whereIn($column, $values);
         return $this;
     }
     public function whereNotIn($column, $values) 
@@ -116,16 +116,17 @@ class QueryBuilder extends BaseQuery
     }
     public function andWhereBetween (string $column, mixed $start, mixed $end) 
     {
-        $this->where[] = $this->where[]= $this->whereClauses->andWhereBetween($column ,$start, $end);
+        $this->where[] = $this->whereClauses->andWhereBetween($column ,$start, $end);
         return $this;
     }
     public function having(string $column, string $operator, string $value) {
-        $this->havingClauses->having($column, $operator, $value);
+        $this->having[] = $this->havingClauses->having($column, $operator, $value);
         return $this;
     }
     public function havingIn(string $column, array $items) 
     {
-        $this->havingClauses->havingIn($column, $items);
+        $this->having[] = $this->havingClauses->havingIn($column, $items);
+        return $this;
     }
     // public function havingSum(string $column, $operator, $value) {
     //     $this->havingClauses->havingSum($column, $operator, $value);
@@ -180,5 +181,8 @@ class QueryBuilder extends BaseQuery
         $query = $this->toSql();
         return $this->fetchObject($query);
     }
-
+    public function getQuery() 
+    {
+        return $this->toSql();
+    }
 }

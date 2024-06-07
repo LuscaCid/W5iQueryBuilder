@@ -51,7 +51,7 @@ class WhereClauses
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
         
-        return " WHERE $column IN ( $placeholders ) ";
+        return "  $column IN ( $placeholders ) ";
     }
     public function andWhereIn(string $column, array $items) 
     {
@@ -75,7 +75,7 @@ class WhereClauses
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
         
-        return " WHERE $column NOT IN ( $placeholders ) ";
+        return "  $column NOT IN ( $placeholders ) ";
     }
     public function andWhere(string $column, string $operator, string|int $value)  
     {
@@ -100,7 +100,7 @@ class WhereClauses
 
         $this->bindValues[]= [$bind => $value];
 
-        return " WHERE ".$column." ".$operator. " " . ":$bind" ." ";
+        return "  ".$column." ".$operator. " " . ":$bind" ." ";
     }
     public function andWhereLike (string $column, string|int $value) 
     {

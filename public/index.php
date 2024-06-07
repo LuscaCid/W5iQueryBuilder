@@ -10,7 +10,7 @@ $results = (new W5iQueryBuilder("receita_orcamentaria"))
     ->whereIn("id_fonterecurso", (
         new W5iQueryBuilder("conta_entidade_fonte"))
         ->select(["id_fonterecurso"])
-        ->where("id_contaentidade", "=", 22)
+        ->where("id_contaentidade", "=" ,22)
         ->load(TRUE)
         )
     ->load();

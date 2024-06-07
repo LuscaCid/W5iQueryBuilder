@@ -1,14 +1,16 @@
 <?php
+namespace QueryBuilder\clauses;
 
-use QueryBuilder\bootstrap\BaseQuery;
-
-class OffsetClause extends BaseQuery 
+class LimitClauses 
 {
+    private array $bindValues = [];
+    public function __construct(array &$bindValues)
+    {
+        $this->bindValues = &$bindValues;
+    }
     public function limit(int $limit = 10)
     {
         $this->bindValues[]= ["limit" => $limit];
-    
-        $this->limit = " :limit " ;
-        return $this;
+        return " :limit " ;
     }
 } 

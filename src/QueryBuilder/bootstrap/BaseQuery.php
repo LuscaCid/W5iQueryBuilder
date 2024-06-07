@@ -14,28 +14,13 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     protected $where = [];
     protected $having = [];
     protected $join = [];
-    protected $groupBy = [];
+    protected $groupByItems = [];
     protected $orderByItems = [];
     protected $orderByDirection ;
     protected $limit;
     protected $offset;
 
-    protected function select(array $columns) 
-    {   
-        $this->select = array_merge($this->select, $columns);
-        return $this;
-    }
-    protected function from(array $tables) 
-    {
-        $this->tables = $tables;
-        return $this;   
-    }
     
-    protected function groupBy($fields) {
-        $this->groupBy = array_merge($this->groupBy, (array) $fields);
-        return $this;
-    }
-
     protected function buildSelect() {
         return empty($this->select) ? '*' : implode(', ', $this->select);
     }
@@ -43,9 +28,40 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     {
         return  implode(",", $this->tables);
     }
+    /**
+     * @summary : Metodo que vai retornar todos os 'wheres' formatados, evitando problemas como a passagem de um and sem um where anteriormente
+     * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
+     * @return string
+     */
     protected function buildWhere() {
         //adicionar logica pois ele concatena passando um and para cada where, mas se for um or por exemplo, dá erro 
-        return empty($this->where) ? '' : 'WHERE ' . implode(' AND ', $this->where);
+
+        if(count($this->where) == 1)
+        {
+            return " WHERE " . implode(" ", $this->where) . " ";
+        }
+        else if (count($this->where) > 1)
+        {
+            $wheresFormatted = array_map(function ($where) 
+            {
+                $alreadyContainsWhere = false;
+                if(str_contains(strtoupper($where), "AND") || str_contains(strtolower($where), "OR") ) 
+                {
+                    return $where;
+                }
+                else if(str_contains(strtoupper($where), "WHERE") )
+                {
+                    if($alreadyContainsWhere) 
+                    {
+                        return str_replace("WHERE", "AND" ,strtoupper($where));
+                    }
+                    $alreadyContainsWhere = TRUE;  
+                }               
+            },  $this->where);
+            return implode (" ", $wheresFormatted);
+        }
+        
+        return empty($this->where) ? ' ' : 'WHERE ' . implode(' AND ', $this->where);
     }
 
     protected function buildJoin() {
@@ -53,15 +69,15 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     }
 
     protected function buildGroupBy() {
-        return empty($this->groupBy) ? '' : 'GROUP BY ' . implode(', ', $this->groupBy);
+        return empty($this->groupByItems) ? '' : ' GROUP BY ' . implode(', ', $this->groupByItems);
     }
 
     protected function buildHaving() {
-        return empty($this->having) ? '' : 'HAVING ' . implode(' AND ', $this->having);
+        return empty($this->having) ? '' : ' HAVING ' . implode(' AND ', $this->having);
     }
 
     protected function buildOrderBy() {
-        return empty($this->orderByItems) ? '' : 'ORDER BY ' . implode(', ', $this->orderByItems). " $this->orderByDirection ";
+        return empty($this->orderByItems) ? '' : ' ORDER BY ' . implode(', ', $this->orderByItems). " $this->orderByDirection ";
     }
 
     protected function buildLimit() {
@@ -73,10 +89,10 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     }
 
     protected function toSql() {
-        $sql = 'SELECT ' . $this->buildSelect();
+        $sql  = ' SELECT ' . $this->buildSelect();
         $sql .= ' FROM ' . $this->buildFrom();
         $sql .= ' ' .      $this->buildJoin();
-        $sql .= ' ' .      $this->buildWhere();
+        $sql .= ' WHERE '. $this->buildWhere();
         $sql .= ' ' .      $this->buildGroupBy();
         $sql .= ' ' .      $this->buildHaving();
         $sql .= ' ' .      $this->buildOrderBy();

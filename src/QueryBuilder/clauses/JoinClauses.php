@@ -1,25 +1,28 @@
 <?php
 namespace QueryBuilder\clauses;
 
-use QueryBuilder\bootstrap\BaseQuery;
-
-class JoinClauses extends BaseQuery 
+/**
+ * @summary : Classe para lidar com as clausulas Joins 
+ * @author Lucas Cid
+ */
+class JoinClauses 
 {
-
-    public function innerJoin (mixed $table, string $leftSide, string $operator, string $rightSide ) 
+    public function test() {}
+    public function innerJoin (string $table, string $leftSide, string $operator, string $rightSide ) 
     {
-        $this->join[]= " INNER JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
-        return $this;
+        return " INNER JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
     }
     public function leftJoin (string $table, string $leftSide, string $operator, string $rightSide ) 
     {
-        $this->join[]= " LEFT JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
-        return $this;
+        return " LEFT JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
     }
 
-    public function rightJoin (mixed $table, string $leftSide, string $operator, string $rightSide ) 
+    public function rightJoin (string $table, string $leftSide, string $operator, string $rightSide ) 
     {
-        $this->join[]= " RIGHT JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
-        return $this;
+        return " RIGHT JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
+    }
+    public function fullOuterJoin (string $table, string $leftSide, string $operator, string $rightSide) 
+    {
+        return " FULL OUTER JOIN ".$table." ON ".$leftSide." ". $operator. " ". $rightSide ;
     }
 }

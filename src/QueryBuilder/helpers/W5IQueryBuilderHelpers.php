@@ -2,7 +2,7 @@
 namespace QueryBuilder\helpers;
 trait W5IQueryBuilderHelpers 
 {
-    protected function getArrValues(array $array) 
+    private function getArrValues(array $array) 
     {
         if(is_array($array) && !empty($array))
         {
@@ -20,16 +20,8 @@ trait W5IQueryBuilderHelpers
             return $arrWithOnlyValues;
         }
     }
-    protected function verifyIfAlreadyHasClauseWhere($query) : bool
-    {
-        if(str_contains(strtoupper($query), "WHERE")) 
-        {
-            return true;
-        };
-        return false;
-    }
     
-    protected function cutBindColumn(string $bindColumn) 
+    private function cutBindColumn(string $bindColumn) 
     {
         if(str_contains($bindColumn, ".")) 
         {

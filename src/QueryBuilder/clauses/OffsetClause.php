@@ -1,14 +1,18 @@
 <?php
+namespace QueryBuilder\clauses;
 
-use QueryBuilder\bootstrap\BaseQuery;
-
-class OffsetClause extends BaseQuery 
+class OffsetClauses
 {
+    private array $bindValues = [];
+    public function __construct(array &$bindValues)
+    {
+        $this->bindValues = &$bindValues;
+    }
     public function offset(int $offset = 0)
     {
-        $this->bindValues[]= ["offset" => $offset];
+        $this->bindValues = ["offset" => $offset];
     
-        $this->offset = " :offset " ;
-        return $this;
+        return " :offset " ;
+        
     }
 } 

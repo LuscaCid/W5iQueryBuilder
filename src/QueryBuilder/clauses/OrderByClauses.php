@@ -8,7 +8,6 @@ class OrderByClauses extends BaseQuery
 {
     public function orderBy(array $columns)
     {
-        $this->orderByItems[] = array_merge($this->orderByItems, $columns);
-        return $this;
+        return array_merge($this->orderByItems, $columns);
     }
 }

@@ -1,40 +1,64 @@
 <?php
+namespace QueryBuilder\bootstrap;
 
 use QueryBuilder\bootstrap\BaseQuery;
+use QueryBuilder\clauses\GroupByClauses;
 use QueryBuilder\clauses\HavingClauses;
 use QueryBuilder\clauses\JoinClauses;
+use QueryBuilder\clauses\LimitClauses;
+use QueryBuilder\clauses\OffsetClauses;
+use QueryBuilder\clauses\OrderByClauses;
 use QueryBuilder\clauses\WhereClauses;
 
 class QueryBuilder extends BaseQuery 
 {
-    protected WhereClauses $whereClauses;
-    protected HavingClauses $havingClauses;
-    protected JoinClauses $joinClauses;
-    protected $orderByClauses;
-    protected $limitClause;
+    private WhereClauses $whereClauses;
+    private HavingClauses $havingClauses;
+    private JoinClauses $joinClauses;
+    private OrderByClauses $orderByClauses;
+    private LimitClauses $limitClauses;
+    private OffsetClauses $offsetClauses;
+    private GroupByClauses $groupByClauses;
 
-    public function __construct(string $unit) {
-        $this->whereClauses  = new WhereClauses();
-        $this->joinClauses   = new JoinClauses();
-        $this->havingClauses = new HavingClauses();
-    }
-    
-    public function groupBy($columns)
+    public function __construct(mixed $table = NULL)
     {
-        $this->groupBy = array_merge($this->groupBy, $columns);
-        return $this;
-    }
-    public function where(string $column, string $operator, string $value) {
-        $this->whereClauses->where($column, $operator, $value);
-        return $this;
-    }
+        $this->tables[] = is_array($table) ? array_merge($this->tables, $table) : $table;
 
-    public function whereBetween($column, $start, $end) {
+        $this->whereClauses   = new WhereClauses($this->bindValues, $this->placeholderValues);
+        $this->havingClauses  = new HavingClauses($this->bindValues, $this->placeholderValues);
+        $this->limitClauses   = new LimitClauses($this->bindValues);
+        $this->offsetClauses  = new OffsetClauses($this->bindValues);
+        $this->joinClauses    = new JoinClauses();
+        $this->orderByClauses = new OrderByClauses();
+        $this->groupByClauses = new GroupByClauses();
+    }
+    public function select(array $columns) 
+    {   
+        $this->select = array_merge($this->select, $columns);
+        return $this;
+    }
+    public function from(array $tables) 
+    {
+        $this->tables = $tables;
+        return $this;   
+    }
+    public function groupBy(array $columns)
+    {
+        $this->groupByItems[] = $this->groupByClauses->groupBy($this->groupByItems, $columns); 
+        return $this;
+    }
+    public function where(string $column, string $operator, string $value) 
+    {
+         $this->whereClauses->where($column, $operator, $value);
+        return $this;
+    }
+    public function whereBetween($column, $start, $end) 
+    {
         $this->whereClauses->whereBetween($column, $start, $end);
         return $this;
     }
-
-    public function whereIn($column, array $values) {
+    public function whereIn($column, array $values) 
+    {
         $this->whereClauses->whereIn($column, $values);
         return $this;
     }
@@ -51,6 +75,7 @@ class QueryBuilder extends BaseQuery
         $this->havingClauses->having($column, $operator, $value);
         return $this;
     }
+    
     public function havingIn(string $column, array $items) 
     {
         $this->havingClauses->havingIn($column, $items);
@@ -60,25 +85,53 @@ class QueryBuilder extends BaseQuery
     //     return $this;
     // }
 
-    public function innerJoin(string $table, string $rightSide, string $operator, string $leftSide) {
-        $this->joinClauses->innerJoin($table, $rightSide, $operator, $leftSide);
+    public function innerJoin(string $table, string $rightSide, string $operator, string $leftSide) 
+    {
+        $this->join[] = $this->joinClauses->innerJoin($table, $rightSide, $operator, $leftSide);
         return $this;
     }
     public function join(string $table, string $rightSide, string $operator, string $leftSide) 
     {
-        $this->joinClauses->innerJoin($table, $rightSide, $operator, $leftSide);
+        $this->join[] =  $this->joinClauses->innerJoin($table, $rightSide, $operator, $leftSide);
         return $this;
     }
-    public function orderBy(array $columns, $direction = 'ASC') {
+    
+    public function leftJoin(string $table, string $operator, string $rightSide ,string $leftSide) 
+    {
+        $this->join[] = $this->joinClauses->leftJoin($table, $rightSide ,$operator, $leftSide);
+        return $this;
+    }
+    public function rightJoin(string $table, string $operator, string $rightSide ,string $leftSide) 
+    {
+        $this->join[] = $this->joinClauses->rightJoin($table, $rightSide ,$operator, $leftSide);
+        return $this;
+    }
+    public function orderBy(array $columns, $direction = 'ASC') 
+    {
         $this->orderByDirection = $direction;
-
-        $this->orderByClauses->orderBy($columns);
+        $this->orderByItems[] = $this->orderByClauses->orderBy($columns);
         return $this;
     }
 
-    public function limit($limit) {
-        $this->limitClause->limit($limit);
+    public function limit($limit) 
+    {
+        $this->limit = $this->limitClauses->limit($limit);
         return $this;
+    }
+    public function offset($offset) 
+    {
+        $this->offset = $this->offsetClauses->offset($offset);
+        return $this;
+    }
+    public function load(bool $isValueable = false)  
+    {
+        $query = $this->toSql();
+        return $this->fetchAll($query, $isValueable);
+    }
+    public function first() 
+    {
+        $query = $this->toSql();
+        return $this->fetchObject($query);
     }
 
 }

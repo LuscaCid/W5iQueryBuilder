@@ -1,17 +1,26 @@
 <?php
 namespace QueryBuilder\clauses;
 use QueryBuilder\bootstrap\BaseQuery;
+use QueryBuilder\helpers\W5IQueryBuilderHelpers;
 
-class HavingClauses extends BaseQuery
+class HavingClauses
 {
+    use W5IQueryBuilderHelpers;
+
+    private array $bindValues;
+    private array $placeholderValues;
+    public function __construct (array &$bindValues, array &$placeholderValues)
+    {
+        $this->bindValues = &$bindValues;
+        $this->placeholderValues = &$placeholderValues;
+    }
     public function having(string $column, string $operator, string $value)
     {
         $bind = $this->cutBindColumn($column);
         
         $this->bindValues[]= [$bind => $value];
 
-        $this->having[] = " $column $operator :$bind";
-        return $this;
+        return " $column $operator :$bind";
 
     }
     public function havingIn(string $column, array $items) 
@@ -20,8 +29,6 @@ class HavingClauses extends BaseQuery
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
 
-        $this->having[] = " HAVING $column IN ( $placeholders ) ";
-
-        return $this;
+        return " $column IN ( $placeholders ) ";
     }
 }

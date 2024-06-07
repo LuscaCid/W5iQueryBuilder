@@ -12,7 +12,6 @@ abstract class W5IQueryBuilderCore
     private bool $isAdiantiFrameworkProject ;
     protected array $placeholderValues = [];
     protected array $bindValues = [] ; 
-    protected string $query;
     protected string $tableName;
     protected string $transactionUnit;
     
@@ -20,19 +19,18 @@ abstract class W5IQueryBuilderCore
      * @summary  metodo simples apenas para "achatar um array" 
      * @param array $array : array que vai ser achatado
      * */
-    public function first() 
+    public function fetchObject(string $query) 
     {
         include "../config/DataSource.php";
         $this->isAdiantiFrameworkProject = $config['$isAdiantiFrameworkProject'];
         try 
         {
             // TTransaction::open($this->transactionUnit);
-            
             // $pdo = TTransaction::get();
             $instance = new DbConnection();
             $pdo = $instance->PDO;
-
-            $stmt = $pdo->prepare($this->query);
+            
+            $stmt = $pdo->prepare($query);
             if(isset($this->bindValues) && is_array($this->bindValues) && !empty($this->bindValues)) 
             {
                 foreach($this->bindValues as $bind) 
@@ -58,11 +56,13 @@ abstract class W5IQueryBuilderCore
     }
     
     /**
-     * @summary : carrega finalmente a query montada anteriormente
+     * @summary : carrega finalmente a query montada anteriormente, podendo ser tanto num ambiente com adianti ou sem...
+     * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
+     * @created : 07/06/2024
      * @return array<object>|void: 
      */
 
-    public function load($isValueable = false) 
+    public function fetchAll(string $query, $isValueable = false) 
     {
         include "../config/DataSource.php";
         $this->isAdiantiFrameworkProject = false;
@@ -85,7 +85,7 @@ abstract class W5IQueryBuilderCore
                 $pdo = $conn->PDO;
             }
 
-            $stmt = $pdo->prepare($this->query);
+            $stmt = $pdo->prepare($query);
             if(isset($this->bindValues) && is_array($this->bindValues) && !empty($this->bindValues)) 
             {
                 foreach($this->bindValues as $bind) 

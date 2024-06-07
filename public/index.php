@@ -1,15 +1,16 @@
 <?php
 
 use QueryBuilder\bootstrap\QueryBuilder;
+use QueryBuilder\bootstrap\W5iQueryBuilder;
 
 include "../vendor/autoload.php";
 
-$results = (new QueryBuilder("receita_orcamentaria"))
+$results = (new W5iQueryBuilder("receita_orcamentaria"))
     ->select(["id_fonterecurso"])
     ->whereIn("id_fonterecurso", (
-        new QueryBuilder("conta_entidade_fonte"))
+        new W5iQueryBuilder("conta_entidade_fonte"))
         ->select(["id_fonterecurso"])
-        ->where("id_contaentidade", "=", 22)
+        ->where("id_contaentidade", "=" ,22)
         ->load(TRUE)
         )
     ->load();
@@ -17,5 +18,3 @@ $results = (new QueryBuilder("receita_orcamentaria"))
 
 
 var_dump($results) ;
-
-$newInstance = (new QueryBuilder())->select([]);

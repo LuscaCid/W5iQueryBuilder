@@ -26,11 +26,19 @@ abstract class W5IQueryBuilderCore
         $this->isAdiantiFrameworkProject = $config['$isAdiantiFrameworkProject'];
         try 
         {
-            // TTransaction::open($this->transactionUnit);
-            // $pdo = TTransaction::get();
-            $instance = new DbConnection();
-            $pdo = $instance->PDO;
-            
+            if ($this->isAdiantiFrameworkProject) 
+            {
+                // Assume que é um projeto Adianti Framework
+                TTransaction::open();
+                $conn = TTransaction::get();
+            } 
+            else 
+            {
+                // Caso contrário, use DbConnectionService
+                $conn = new DbConnection();
+                $conn->PDO->beginTransaction();
+                $pdo = $conn->PDO;
+            }
             $stmt = $pdo->prepare($query);
             if(isset($this->bindValues) && is_array($this->bindValues) && !empty($this->bindValues)) 
             {
@@ -44,14 +52,15 @@ abstract class W5IQueryBuilderCore
             $objects = $stmt->fetchObject(PDO::FETCH_OBJ);
             
             return $objects;
-        } catch ( PDOException $e) 
+        } 
+        catch (PDOException $e) 
         {
-            //TTransaction::rollback();
+            $this->isAdiantiFrameworkProject ? TTransaction::rollBack() : $conn->PDO->rollBack();
             throw new Exception($e->getMessage());
-        }
+        } 
         finally 
         {
-            //TTransaction::close();
+            $this->isAdiantiFrameworkProject ? TTransaction::close() : $conn->PDO->commit();
         }
         
     }
@@ -111,29 +120,12 @@ abstract class W5IQueryBuilderCore
         }
         catch (PDOException $e) 
         {
-            // Rollback transaction in case of error
-            if ($this->isAdiantiFrameworkProject) 
-            {
-                TTransaction::rollback();
-            } 
-            else 
-            {
-                $conn->PDO->rollBack();
-            }
-    
+            $this->isAdiantiFrameworkProject ? TTransaction::rollBack() : $conn->PDO->rollBack();
             throw new Exception($e->getMessage());
         } 
         finally 
         {
-            // Close transaction if it's Adianti Framework
-            if ($this->isAdiantiFrameworkProject) 
-            {
-                TTransaction::close();
-            }
-            else 
-            {
-                $conn->PDO->commit();
-            }
+            $this->isAdiantiFrameworkProject ? TTransaction::close() : $conn->PDO->commit();
         }
     }
    

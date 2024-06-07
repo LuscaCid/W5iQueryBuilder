@@ -1,9 +1,13 @@
 <?php
 namespace QueryBuilder\clauses;
 
-use QueryBuilder\bootstrap\BaseQuery;
 use QueryBuilder\helpers\W5IQueryBuilderHelpers;
 
+/**
+ * @summary : Clausulas where para implementar na ClasseQuerybuilder, não sao chamados diretamente, mas pela classe w5iQueryBuilder
+ * @author  Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
+ * @created :  07/06/2024
+ */
 class WhereClauses
 {
     use W5IQueryBuilderHelpers;
@@ -14,6 +18,16 @@ class WhereClauses
     {  
         $this->bindValues = &$bindValues;
         $this->placeholderValues = &$placeholderValues;
+    }
+    
+    public function where3Args(string $column, string $operator, string|int $value) 
+    {
+        $bind = $this->cutBindColumn($column);
+
+        $this->bindValues[]= [$bind => $value];
+
+        return  " $column $operator :$bind ";
+
     }
     public function whereBetween($column, $start, $end )
     {
@@ -93,14 +107,13 @@ class WhereClauses
 
         return " OR ". " $column " .$operator. " ". " :$bind ";
     }
-    public function where(string $column, string $operator, string $value) 
+    public function where(string $column, string $value) 
     {
-
         $bind = $this->cutBindColumn($column);
 
         $this->bindValues[]= [$bind => $value];
 
-        return "  ".$column." ".$operator. " " . ":$bind" ." ";
+        return " ".$column." = ".":$bind" ." ";
     }
     public function andWhereLike (string $column, string|int $value) 
     {

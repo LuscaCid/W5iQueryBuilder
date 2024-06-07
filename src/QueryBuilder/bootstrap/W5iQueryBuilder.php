@@ -11,7 +11,7 @@ use QueryBuilder\clauses\OrderByClauses;
 use QueryBuilder\clauses\SelectClauses;
 use QueryBuilder\clauses\WhereClauses;
 
-class QueryBuilder extends BaseQuery 
+class W5iQueryBuilder extends BaseQuery 
 {
     private SelectClauses $selectClauses;
     private WhereClauses $whereClauses;
@@ -34,6 +34,8 @@ class QueryBuilder extends BaseQuery
         $this->orderByClauses = new OrderByClauses();
         $this->groupByClauses = new GroupByClauses();
     }
+    
+    
     public function select(array $columns) 
     {   
         $this->select = $this->selectClauses->select($columns);
@@ -54,11 +56,28 @@ class QueryBuilder extends BaseQuery
         $this->groupByItems[] = $this->groupByClauses->groupBy($this->groupByItems, $columns); 
         return $this;
     }
-    public function where(string $column, string $operator, string $value) 
+
+        /**
+     * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
+     * @author : Lucas Felipe Lima Cid
+     * @created 07/06/2024
+     */
+    public function __call($name, $arguments)
     {
-        $this->where[] = $this->whereClauses->where($column, $operator, $value);
-        return $this;
-    }
+        switch ($name)
+        {
+            case 'where':
+                switch (count($arguments)) 
+                {
+                    case 2:
+                        $this->where[] = $this->whereClauses->where($arguments[0], $arguments[1]);
+                        return $this;
+                    case 3:
+                        $this->where[]= $this->whereClauses->where3Args($arguments[0], $arguments[1], $arguments[2]);
+                        return $this;
+                }
+        } 
+    }    
     public function whereBetween($column, $start, $end) 
     {
         $this->where[] = $this->whereClauses->whereBetween($column, $start, $end);
@@ -181,7 +200,12 @@ class QueryBuilder extends BaseQuery
         $query = $this->toSql();
         return $this->fetchObject($query);
     }
-    public function getQuery() 
+    /**
+     * @sumary Apenas retorna a query montada.
+     * @author Lucas Cid
+     * @return mixed
+     */
+    public function getQuery()  :mixed
     {
         return $this->toSql();
     }

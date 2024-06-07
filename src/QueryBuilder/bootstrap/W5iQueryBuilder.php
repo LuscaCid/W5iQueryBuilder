@@ -11,7 +11,7 @@ use QueryBuilder\clauses\OrderByClauses;
 use QueryBuilder\clauses\SelectClauses;
 use QueryBuilder\clauses\WhereClauses;
 
-class QueryBuilder extends BaseQuery 
+class W5iQueryBuilder extends BaseQuery 
 {
     private SelectClauses $selectClauses;
     private WhereClauses $whereClauses;

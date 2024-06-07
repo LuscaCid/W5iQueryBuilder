@@ -6,9 +6,9 @@ use PDO;
 use PDOException;
 use QueryBuilder\helpers\W5IQueryBuilderHelpers;
 use QueryBuilder\config\DbConnection;
-abstract class W5IQueryBuilderCore extends W5IQueryBuilderHelpers
+abstract class W5IQueryBuilderCore 
 {
-    
+    use W5IQueryBuilderHelpers;
     private bool $isAdiantiFrameworkProject ;
     protected array $placeholderValues = [];
     protected array $bindValues = [] ; 

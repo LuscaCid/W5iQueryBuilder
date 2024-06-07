@@ -5,7 +5,26 @@ use QueryBuilder\bootstrap\BaseQuery;
 
 class WhereClauses extends BaseQuery
 {
+    public function whereBetween($column, $start, $end)
+    {
+        //binded column : serve para realizar a remocao de um possivel alias
+        $bind = $this->cutBindColumn($column);
 
+        $this->bindValues[]= ["$bind._start" => $start];
+        $this->bindValues[]= ["$bind._end" => $end];
+       
+        $this->where[]= " $column BETWEEN :$column._start AND :$bind._end ";
+        return $this;
+    }
+    public function whereIn(string $column, array $items) 
+    {
+        $placeholders = implode(",", array_fill(0, count($items), "?"));
+
+        $this->placeholderValues = array_merge($this->placeholderValues, $items );
+        $this->where[] = " $column IN ( $placeholders ) ";
+
+        return $this;
+    }
     public function andWhereIn(string $column, array $items) 
     {
         $placeholders = implode(",", array_fill(0, count($items), "?"));
@@ -26,7 +45,7 @@ class WhereClauses extends BaseQuery
         return $this;
         
     }
-    public function andWhere(string $column, string $operator, string $value)  
+    public function andWhere(string $column, string $operator, string|int $value)  
     {
         $bind = $this->cutBindColumn($column);
 
@@ -35,7 +54,7 @@ class WhereClauses extends BaseQuery
         $this->where[]= " AND " .$column. " ".$operator. " ". " :$bind ";
         return $this;
     }
-    public function orWhere(string $column, string $operator, string $value) 
+    public function orWhere(string $column, string $operator, string|int $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -54,14 +73,14 @@ class WhereClauses extends BaseQuery
         $this->where[]= " WHERE ".$column." ".$operator. " " . ":$bind" ." ";
         return $this;
     }
-    public function andWhereLike (string $column, $value) 
+    public function andWhereLike (string $column, string|int $value) 
     {
         $this->bindValues[]= [$column => $value];
         $this->where[]= " AND ".$column." LIKE " . " :$column ";
 
         return $this;
     }
-    public function andWhereILike (string $column, string $value) 
+    public function andWhereILike (string $column, string|int $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -72,7 +91,7 @@ class WhereClauses extends BaseQuery
         return $this;
     }
 
-    public function orWhereLike (string $column, $value) 
+    public function orWhereLike (string $column, string|int $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -93,15 +112,5 @@ class WhereClauses extends BaseQuery
         return $this;
     }
 
-    protected function cutBindColumn(string $bindColumn) 
-    {
-        if(str_contains($bindColumn, ".")) 
-        {
-            $dotPosition = strpos($bindColumn, ".");
-            //deve retornar toda a string apos o '.' para criar o bindColumn
-            $bindColumn = substr($bindColumn, $dotPosition + 1);
-            return $bindColumn;
-        }
-        return $bindColumn;
-    }
+   
 }

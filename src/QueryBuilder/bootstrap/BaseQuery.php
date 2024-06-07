@@ -2,53 +2,46 @@
 
 namespace QueryBuilder\bootstrap;
 
-class BaseQuery 
+use QueryBuilder\core\W5IQueryBuilderCore;
+
+abstract class BaseQuery extends W5IQueryBuilderCore
 {
     protected $bindValues = [];
     protected $placeholderValues;
     protected $placeholders;
     protected $select = [];
-    protected $from = [];
+    protected $tables = [];
     protected $where = [];
     protected $having = [];
     protected $join = [];
-    protected $orderBy = [];
     protected $groupBy = [];
+    protected $orderByItems = [];
+    protected $orderByDirection ;
     protected $limit;
     protected $offset;
 
-    public function select(array $columns) 
+    protected function select(array $columns) 
     {   
         $this->select = array_merge($this->select, $columns);
         return $this;
     }
-    public function from(string $table) 
+    protected function from(array $tables) 
     {
-        $this->from = $table;
+        $this->tables = $tables;
         return $this;   
     }
     
-    public function groupBy($fields) {
+    protected function groupBy($fields) {
         $this->groupBy = array_merge($this->groupBy, (array) $fields);
         return $this;
     }
 
-    public function having($condition) {
-        $this->having[] = $condition;
-        return $this;
-    }
-
-    public function orderBy($field, $direction = 'ASC') {
-        $this->orderBy[] = "$field $direction";
-        return $this;
-    }
-
-    public function limit($limit) {
+    protected function limit($limit) {
         $this->limit = $limit;
         return $this;
     }
 
-    public function offset($offset) {
+    protected function offset($offset) {
         $this->offset = $offset;
         return $this;
     }
@@ -56,17 +49,17 @@ class BaseQuery
     protected function buildSelect() {
         return empty($this->select) ? '*' : implode(', ', $this->select);
     }
-
-    protected function buildFrom() {
-        return implode(', ', $this->from);
+    protected function buildFrom() 
+    {
+        return  implode(",", $this->tables);
     }
-
     protected function buildWhere() {
+        //adicionar logica pois ele concatena passando um and para cada where, mas se for um or por exemplo, dá erro 
         return empty($this->where) ? '' : 'WHERE ' . implode(' AND ', $this->where);
     }
 
     protected function buildJoin() {
-        return implode(' ', $this->join);
+        return !empty($this->join) ? implode(' ', $this->join) : "";
     }
 
     protected function buildGroupBy() {
@@ -78,7 +71,7 @@ class BaseQuery
     }
 
     protected function buildOrderBy() {
-        return empty($this->orderBy) ? '' : 'ORDER BY ' . implode(', ', $this->orderBy);
+        return empty($this->orderByItems) ? '' : 'ORDER BY ' . implode(', ', $this->orderByItems). " $this->orderByDirection ";
     }
 
     protected function buildLimit() {
@@ -89,7 +82,7 @@ class BaseQuery
         return isset($this->offset) ? ' OFFSET ' . $this->offset : '';
     }
 
-    public function toSql() {
+    protected function toSql() {
         $sql = 'SELECT ' . $this->buildSelect();
         $sql .= ' FROM ' . $this->buildFrom();
         $sql .= ' ' .      $this->buildJoin();

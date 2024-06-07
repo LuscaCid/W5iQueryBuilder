@@ -1,6 +1,6 @@
 <?php
 namespace QueryBuilder\helpers;
- class W5IQueryBuilderHelpers 
+trait W5IQueryBuilderHelpers 
 {
     protected function getArrValues(array $array) 
     {

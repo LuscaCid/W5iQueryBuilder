@@ -75,8 +75,11 @@ class WhereClauses extends BaseQuery
     }
     public function andWhereLike (string $column, string|int $value) 
     {
-        $this->bindValues[]= [$column => $value];
-        $this->where[]= " AND ".$column." LIKE " . " :$column ";
+        $bind = $this->cutBindColumn($column);
+
+        $this->bindValues[]= [$bind => $value];
+        
+        $this->where[]= " AND ".$column." LIKE " . " :$bind ";
 
         return $this;
     }
@@ -86,7 +89,7 @@ class WhereClauses extends BaseQuery
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->where[]= " AND ".$column." ILIKE " . " :$column ";
+        $this->where[]= " AND ".$column." ILIKE " . " :$bind ";
 
         return $this;
     }
@@ -97,7 +100,7 @@ class WhereClauses extends BaseQuery
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->where[]= " OR ".$column." LIKE " . " :$column ";
+        $this->where[]= " OR ".$column." LIKE " . " :$bind ";
 
         return $this;
     }
@@ -107,7 +110,7 @@ class WhereClauses extends BaseQuery
 
         $this->bindValues[]= [$bind => $value];
 
-        $this->where[]= " OR ".$column." ILIKE " . " :$column " ;
+        $this->where[]= " OR ".$column." ILIKE " . " :$bind " ;
 
         return $this;
     }

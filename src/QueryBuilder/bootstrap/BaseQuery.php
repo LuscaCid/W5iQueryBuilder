@@ -36,16 +36,6 @@ abstract class BaseQuery extends W5IQueryBuilderCore
         return $this;
     }
 
-    protected function limit($limit) {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    protected function offset($offset) {
-        $this->offset = $offset;
-        return $this;
-    }
-
     protected function buildSelect() {
         return empty($this->select) ? '*' : implode(', ', $this->select);
     }
@@ -75,11 +65,11 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     }
 
     protected function buildLimit() {
-        return isset($this->limit) ? ' LIMIT ' . $this->limit : '';
+        return isset($this->limit) ? ' LIMIT ' . ":$this->limit" : '';
     }
 
     protected function buildOffset() {
-        return isset($this->offset) ? ' OFFSET ' . $this->offset : '';
+        return isset($this->offset) ? ' OFFSET ' . ":$this->offset" : '';
     }
 
     protected function toSql() {

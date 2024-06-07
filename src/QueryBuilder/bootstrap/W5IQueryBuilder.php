@@ -11,7 +11,7 @@ use QueryBuilder\clauses\wheres\W5IQuerybBuilderWhereClauses;
  * @author Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
  * @created 04/06/2024
  */
-class W5IQueryBuilder extends W5IQuerybBuilderWhereClauses
+class W5IQueryBuilder extends BaseQuery
 {
 
     public function __construct(string $tableName, string $transactionUnit)

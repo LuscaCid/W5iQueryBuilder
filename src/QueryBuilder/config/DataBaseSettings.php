@@ -46,5 +46,4 @@ class DataBaseSettings
         return $this->dataBaseConfig;
     }
     private function __clone() {}
-    private function __wakeup() {}
 }

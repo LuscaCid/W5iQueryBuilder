@@ -10,6 +10,7 @@ use QueryBuilder\clauses\OffsetClauses;
 use QueryBuilder\clauses\OrderByClauses;
 use QueryBuilder\clauses\SelectClauses;
 use QueryBuilder\clauses\WhereClauses;
+use QueryBuilder\config\DataBaseSettings;
 
 class W5iQueryBuilder extends BaseQuery 
 {
@@ -22,9 +23,29 @@ class W5iQueryBuilder extends BaseQuery
     private OffsetClauses $offsetClauses;
     private GroupByClauses $groupByClauses;
 
-    public function __construct(mixed $table = NULL)
+    /**
+     * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
+     * @summary : Funcção construtora para utilização da classe e seus respectivos metodos, podendo ser .
+     * @param array|string $tables : podendo ser null para que as tabelas possam ser passadas posteriormente no metodo "from", mas também podem ser passadas a(s) tabela(s) as quais sofrerão a consulta 
+     * @param string $otherUnit : Outra unidade caso for necessario abrir outra transacao com outra base de dados. 
+     */
+    public function __construct(mixed $tables = NULL, string $otherUnit = NULL)
     {
-        $this->tables[] = is_array($table) ? array_merge($this->tables, $table) : $table;
+        $instance = DataBaseSettings::getInstance();
+      
+        //caso o usuario queira mudar o banco o qual sofrerá a transacao mantendo a mesma senha e username
+        if (isset($otherUnit) && is_string($otherUnit) ) 
+        {
+            $instance->setDatabaseConfigByKey("dbName", $otherUnit);
+
+        }
+        if (is_array($tables)) 
+        {
+            $this->tables[] = array_merge($this->tables, $tables);
+        } else if (is_string($tables)) 
+        {
+            $this->tables[] = $tables;
+        }
         $this->selectClauses  = new SelectClauses($this->select);
         $this->whereClauses   = new WhereClauses($this->bindValues, $this->placeholderValues);
         $this->havingClauses  = new HavingClauses($this->bindValues, $this->placeholderValues);
@@ -57,7 +78,7 @@ class W5iQueryBuilder extends BaseQuery
         return $this;
     }
 
-        /**
+    /**
      * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
      * @author : Lucas Felipe Lima Cid
      * @created 07/06/2024

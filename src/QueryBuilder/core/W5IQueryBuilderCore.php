@@ -4,6 +4,7 @@ use Adianti\Database\TTransaction;
 use Exception;
 use PDO;
 use PDOException;
+use QueryBuilder\config\DataBaseSettings;
 use QueryBuilder\helpers\W5IQueryBuilderHelpers;
 use QueryBuilder\config\DbConnection;
 abstract class W5IQueryBuilderCore 
@@ -14,7 +15,6 @@ abstract class W5IQueryBuilderCore
     protected array $bindValues = [] ; 
     protected array $placeholders = [] ;
     protected string $tableName;
-    protected string $transactionUnit;
     
     /**
      * @summary  metodo simples apenas para "achatar um array" 
@@ -22,14 +22,16 @@ abstract class W5IQueryBuilderCore
      * */
     public function fetchObject(string $query) 
     {
-        include "../config/DataSource.php";
+        $instance = DataBaseSettings::getInstance();
+        $config  = $instance->getSettings();
+        
         $this->isAdiantiFrameworkProject = $config['$isAdiantiFrameworkProject'];
         try 
         {
             if ($this->isAdiantiFrameworkProject) 
             {
                 // Assume que é um projeto Adianti Framework
-                TTransaction::open();
+                TTransaction::open($config["dbName"]);
                 $conn = TTransaction::get();
             } 
             else 
@@ -74,8 +76,11 @@ abstract class W5IQueryBuilderCore
 
     public function fetchAll(string $query, $isValueable = false) 
     {
-        include "../config/DataSource.php";
-        $this->isAdiantiFrameworkProject = false;
+        $instance = DataBaseSettings::getInstance();
+        $config   = $instance->getSettings();
+
+        $this->isAdiantiFrameworkProject = $config["isAdiantiFrameworkProject"];
+
         try 
         {
             //TTransaction::open($this->transactionUnit);
@@ -84,7 +89,7 @@ abstract class W5IQueryBuilderCore
             if ($this->isAdiantiFrameworkProject) 
             {
                 // Assume que é um projeto Adianti Framework
-                TTransaction::open();
+                TTransaction::open($config["dbName"]);
                 $conn = TTransaction::get();
             } 
             else 

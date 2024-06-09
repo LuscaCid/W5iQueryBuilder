@@ -12,8 +12,9 @@ Um simples query builder para padronizar a montagem de queries, deixando o códi
 Lucas Felipe Lima Cid  
 <lucasfelipaaa@gmail.com>
 
-## Criado em:
-04/06/2024
+## Criado em: 04/06/2024
+
+
 W5iQueryBuilder
 ================
 

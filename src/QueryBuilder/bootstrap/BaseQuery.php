@@ -35,15 +35,18 @@ abstract class BaseQuery extends W5IQueryBuilderCore
         $whereClausesFormatted = [];
         if(!empty($this->where)) 
         {
-            foreach ($this->where as $key => $value)
+            for($index = 0; $index < count($this->where); $index++) 
             {
-                $contains = str_contains(strtoupper($value), "AND") || str_contains(strtoupper($value), "OR");
-                if(!$contains && $key > 0) 
+                $condition = $this->where[$index] ;
+                
+                $contains = str_contains(strtoupper($condition), " AND ") || str_contains(strtoupper($condition), " OR ") ? TRUE : FALSE;
+
+                if(!$contains && $index > 0) 
                 {
-                    $whereClausesFormatted[] = " AND $value ";
+                    $whereClausesFormatted[] = " AND " . $condition . " ";
                     continue;
                 }
-                $whereClausesFormatted[] = $value;
+                $whereClausesFormatted[] = $this->where[$index];
             }
         //verificar em cada string de where se NAO ha aS clausulaS AND, OR, LIKE, ILIKE, E NESTES ADICIONAR O AND
             return ' WHERE ' . implode(' ', $whereClausesFormatted);

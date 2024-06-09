@@ -10,7 +10,7 @@ class OffsetClauses
     }
     public function offset(int $offset = 0)
     {
-        $this->bindValues = ["offset" => $offset];
+        $this->bindValues[] = ["offset" => $offset];
     
         return " :offset " ;
         

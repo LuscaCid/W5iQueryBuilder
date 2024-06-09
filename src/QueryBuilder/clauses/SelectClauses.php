@@ -13,8 +13,16 @@ class SelectClauses
     {
         return array_merge($this->actualSelectArr, $columns);
     }
-    public function selectCount(array $columns = NULL) 
+    public function selectCount(array $columns = NULL, $alias = NULL) 
     {
-        return " COUNT( " . isset($columns) ? implode(",", $columns) : "*" . ") ";
+        $columnsImploded = is_array($columns) ? implode(",", $columns) : "*";
+
+        $isSettedlias = isset($alias) ? " AS ". $alias : " ";
+
+        $clausSentence = " COUNT($columnsImploded)" . $isSettedlias . " ";
+
+        //a clausula count vai ser tratada como se fosse uma coluna
+        $this->actualSelectArr = array_merge($this->actualSelectArr, [$clausSentence]);
+        return $this->actualSelectArr;
     }
 }

@@ -20,7 +20,7 @@ class DataBaseSettings
     {
         if(self::$instance == null) 
         {
-            self::$instance = new self();
+            self::$instance = new self;
             return self::$instance;
         }
         return self::$instance;

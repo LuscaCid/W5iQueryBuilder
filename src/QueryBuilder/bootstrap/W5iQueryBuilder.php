@@ -2,6 +2,7 @@
 namespace QueryBuilder\bootstrap;
 
 use QueryBuilder\bootstrap\BaseQuery;
+use QueryBuilder\clauses\FromClauses;
 use QueryBuilder\clauses\GroupByClauses;
 use QueryBuilder\clauses\HavingClauses;
 use QueryBuilder\clauses\JoinClauses;
@@ -15,6 +16,7 @@ use QueryBuilder\config\DataBaseSettings;
 class W5iQueryBuilder extends BaseQuery 
 {
     private SelectClauses $selectClauses;
+    private FromClauses $fromClauses;
     private WhereClauses $whereClauses;
     private HavingClauses $havingClauses;
     private JoinClauses $joinClauses;
@@ -47,6 +49,7 @@ class W5iQueryBuilder extends BaseQuery
             $this->tables[] = $tables;
         }
         $this->selectClauses  = new SelectClauses($this->select);
+        $this->fromClauses    = new FromClauses($this->tables);
         $this->whereClauses   = new WhereClauses($this->bindValues, $this->placeholderValues);
         $this->havingClauses  = new HavingClauses($this->bindValues, $this->placeholderValues);
         $this->limitClauses   = new LimitClauses($this->bindValues);
@@ -62,14 +65,18 @@ class W5iQueryBuilder extends BaseQuery
         $this->select = $this->selectClauses->select($columns);
         return $this;
     }
-    public function selectCount(array $columns) 
+    /**
+     * @param array $columns : Colunas que sofrerao o select como sendo count
+     * @param string $alias : Apelido que seria passado em ex: "select count(*) as qt_items from tabela"
+     */
+    public function selectCount(array $columns = NULL, string $alias = NULL) 
     {
-        $this->select = $this->selectClauses->selectCount($columns);
+        $this->select = $this->selectClauses->selectCount($columns, $alias);
         return $this;
     }
     public function from(array $tables) 
     {
-        $this->tables = $tables;
+        $this->tables[] = $this->fromClauses->from($tables);
         return $this;   
     }
     public function groupBy(array $columns)
@@ -104,14 +111,34 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->whereBetween($column, $start, $end);
         return $this;
     }
-    public function whereIn($column, array $values) 
+    public function andWhereBetween($column, $start, $end) 
+    {
+        $this->where[] = $this->whereClauses->andWhereBetween($column, $start, $end);
+        return $this;
+    }
+    public function orWhereBetween($column, $start, $end) 
+    {
+        $this->where[] = $this->whereClauses->orWhereBetween($column, $start, $end);
+        return $this;
+    }
+    public function whereIn($column, array|null $values) 
     {
         $this->where[] = $this->whereClauses->whereIn($column, $values);
         return $this;
     }
-    public function whereNotIn($column, $values) 
+    public function whereNotIn($column,  array|null $values) 
     {
         $this->where[] = $this->whereClauses->whereNotIn($column, $values);
+        return $this;
+    }
+    public function andWhereNotIn(string $column, array|null  $values) 
+    {
+        $this->where[] = $this->whereClauses->andWhereNotIn($column, $values);
+        return $this;
+    }
+    public function orWhereNotIn(string $column, array|null  $values) 
+    {
+        $this->where[] = $this->whereClauses->orWhereNotIn($column, $values);
         return $this;
     }
     public function andWhereLike(string $column, mixed $value) 
@@ -152,11 +179,6 @@ class W5iQueryBuilder extends BaseQuery
     public function orWhereIn (string $column, array $value) 
     {
        $this->where[] = $this->whereClauses->orWhereIn($column, $value);
-        return $this;
-    }
-    public function andWhereBetween (string $column, mixed $start, mixed $end) 
-    {
-        $this->where[] = $this->whereClauses->andWhereBetween($column ,$start, $end);
         return $this;
     }
     public function having(string $column, string $operator, string $value) {

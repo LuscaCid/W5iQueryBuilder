@@ -59,8 +59,9 @@ class WhereClauses
        
         return " OR $column BETWEEN :$column._start AND :$bind._end ";
     }
-    public function whereIn(string $column, array $items) 
+    public function whereIn(string $column, array|null $items) 
     {
+        $items = empty($items) || !isset($items)? [0] : $items;
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
@@ -69,6 +70,8 @@ class WhereClauses
     }
     public function andWhereIn(string $column, array $items) 
     {
+        $items = empty($items) ? [0] : $items;
+
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
@@ -77,14 +80,38 @@ class WhereClauses
     }
     public function orWhereIn(string $column, array $items) 
     {
+        $items = empty($items) ? [0] : $items;
+
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );
         
         return " OR $column IN ( $placeholders ) ";
     }
+    public function andWhereNotIn(string $column, array $items) 
+    {
+        $items = empty($items) ? [0] : $items;
+
+        $placeholders = implode(",", array_fill(0, count($items), "?"));
+
+        $this->placeholderValues = array_merge($this->placeholderValues, $items );
+        
+        return " AND $column NOT IN ( $placeholders ) ";
+    }
+    public function orWhereNotIn(string $column, array $items) 
+    {
+        $items = empty($items) ? [0] : $items;
+
+        $placeholders = implode(",", array_fill(0, count($items), "?"));
+
+        $this->placeholderValues = array_merge($this->placeholderValues, $items );
+        
+        return " OR $column NOT IN ( $placeholders ) ";
+    }
     public function whereNotIn(string $column, array $items) 
     {
+        $items = empty($items) ? [0] : $items;
+
         $placeholders = implode(",", array_fill(0, count($items), "?"));
 
         $this->placeholderValues = array_merge($this->placeholderValues, $items );

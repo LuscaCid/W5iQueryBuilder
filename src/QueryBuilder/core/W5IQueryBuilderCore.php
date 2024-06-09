@@ -23,9 +23,9 @@ abstract class W5IQueryBuilderCore
     public function fetchObject(string $query) 
     {
         $instance = DataBaseSettings::getInstance();
-        $config  = $instance->getSettings();
         
-        $this->isAdiantiFrameworkProject = $config['$isAdiantiFrameworkProject'];
+        $this->isAdiantiFrameworkProject = $instance->getDataFromArrayByKey("isAdiantiFrameworkProject");
+        $config = $instance->getSettings();
         try 
         {
             if ($this->isAdiantiFrameworkProject) 
@@ -51,9 +51,10 @@ abstract class W5IQueryBuilderCore
                     $stmt->bindValue(":$key", $bindValue, is_numeric($bindValue) ? PDO::PARAM_INT : PDO::PARAM_STR);
                 }
             }
-            $objects = $stmt->fetchObject(PDO::FETCH_OBJ);
-            
-            return $objects;
+            $stmt->execute(!empty($this->placeholderValues)? $this->placeholderValues : NULL);
+            $object = $stmt->fetchObject();
+
+            return $object;
         } 
         catch (PDOException $e) 
         {

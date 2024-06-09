@@ -34,7 +34,7 @@ include "../vendor/autoload.php";
 // var_dump($resultsFromRelatorioLocal);
 
 $test = (
-    new W5iQueryBuilder("receita_orcamentaria as ro")
+    new W5iQueryBuilder("receita_orcamentaria as ro", "sipec")
     )->select([
         'ro.id_receitaorcamentaria',
         'ro.cd_receitaorcamentaria',

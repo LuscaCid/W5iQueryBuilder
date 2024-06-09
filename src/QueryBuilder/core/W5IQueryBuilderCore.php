@@ -17,10 +17,14 @@ abstract class W5IQueryBuilderCore
     protected string $tableName;
     
     /**
-     * @summary  metodo simples apenas para "achatar um array" 
-     * @param array $array : array que vai ser achatado
-     * */
-    public function fetchObject(string $query) 
+     * @summary : carrega finalmente a query montada anteriormente, podendo ser tanto num ambiente com adianti ou sem...
+     * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
+     * @created : 07/06/2024
+     * @param string $query : query que é passada no metodo abstrato W5iQueryBuilder::first()
+     * @param bool $isValuable : identifica se o metodo irá retornar apenas o valor (string|int|bool) desacoplado de um objeto 
+     * @return array<object>|void|mixed: 
+     */
+    public function fetchObject(string $query, bool $isValuable = false) 
     {
         $instance = DataBaseSettings::getInstance();
         
@@ -54,6 +58,13 @@ abstract class W5IQueryBuilderCore
             $stmt->execute(!empty($this->placeholderValues)? $this->placeholderValues : NULL);
             $object = $stmt->fetchObject();
 
+            if($isValuable) 
+            {
+                $arr = (array) $object;
+                $key = array_key_first($arr);
+                return $arr[$key];
+            }
+
             return $object;
         } 
         catch (PDOException $e) 
@@ -74,7 +85,6 @@ abstract class W5IQueryBuilderCore
      * @created : 07/06/2024
      * @return array<object>|void: 
      */
-
     public function fetchAll(string $query, $isValueable = false) 
     {
         $instance = DataBaseSettings::getInstance();
@@ -84,9 +94,6 @@ abstract class W5IQueryBuilderCore
 
         try 
         {
-            //TTransaction::open($this->transactionUnit);
-            //$pdo = TTransaction::get();
-
             if ($this->isAdiantiFrameworkProject) 
             {
                 // Assume que é um projeto Adianti Framework

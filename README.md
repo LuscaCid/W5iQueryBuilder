@@ -14,154 +14,120 @@ Lucas Felipe Lima Cid
 
 ## Criado em:
 04/06/2024
+W5iQueryBuilder
+================
 
-## Classe W5IQueryBuilder
+Uma classe de construtor de consultas poderosa para construir e executar consultas de banco de dados.
 
-### Propriedades
-- `private array $placeholderValues`: Array para armazenar valores de placeholders.
-- `private array $bindValues`: Array para armazenar valores de bind.
-- `private string $query`: String para armazenar a query SQL.
-- `private string $tableName`: Nome da tabela para a consulta.
-- `private string $transactionUnit`: Unidade de transação para o TTransaction.
+### Construtor
+
+`__construct(mixed $tables = NULL, string $otherUnit = NULL)`
+
+* `$tables`: Um array ou string de nomes de tabelas para consultar. Pode ser nulo para definir tabelas posteriormente usando o método `from`.
+* `$otherUnit`: Uma string opcional para especificar uma unidade de banco de dados diferente para usar na consulta.
 
 ### Métodos
-#### `__construct(string $tableName, string $transactionUnit)`
-Construtor da classe que inicializa o nome da tabela e a unidade de transação.
 
-#### `__call($name, $arguments)`
-Implementação do método mágico `__call` para tratar métodos dinâmicos como `JOIN`.
+#### SELECT
 
-#### `verifyIfAlreadyHasClauseWhere(): bool`
-Verifica se a cláusula WHERE já está presente na query.
+`select(array $columns)`
 
-#### `getQuery()`
-Retorna a query construída até o momento.
+* `$columns`: Um array de nomes de colunas para selecionar.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `selectCount()`
-Constrói uma query para contar os registros da tabela.
+Seleciona as colunas especificadas da(s) tabela(s).
 
-#### `select(array $columns)`
-Constrói uma query de seleção com as colunas especificadas.
+`selectCount(array $columns = NULL, string $alias = NULL)`
 
-#### `where(string $column, string $operator, string $value)`
-Adiciona uma cláusula WHERE à query.
+* `$columns`: Um array opcional de nomes de colunas para contar.
+* `$alias`: Uma string opcional para aliasar a coluna de contagem.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `orderBy(string $column, string $order)`
-Adiciona uma cláusula ORDER BY à query.
+Seleciona a contagem das colunas especificadas da(s) tabela(s).
 
-#### `offset(int $offset = 0)`
-Adiciona uma cláusula OFFSET à query.
+#### FROM
 
-#### `limit(int $limit = 5)`
-Adiciona uma cláusula LIMIT à query.
+`from(array $tables)`
 
-#### `andWhere(string $column, string $operator, string $value)`
-Adiciona uma cláusula AND WHERE à query.
+* `$tables`: Um array de nomes de tabelas para consultar.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `orWhere(string $column, string $operator, string $value)`
-Adiciona uma cláusula OR WHERE à query.
+Especifica a(s) tabela(s) para consultar.
 
-#### `innerJoin(mixed $table, string $leftSide, string $operator, string $rightSide)`
-Adiciona uma cláusula INNER JOIN à query.
+#### WHERE
 
-#### `leftJoin(string $table, string $leftSide, string $operator, string $rightSide)`
-Adiciona uma cláusula LEFT JOIN à query.
+`where(string $column, string $operator, string $value)`
 
-#### `whereIn(string $column, array $items)`
-Adiciona uma cláusula WHERE IN à query.
+* `$column`: O nome da coluna para filtrar.
+* `$operator`: O operador a usar para o filtro (ex.: `=`, `>`, `<`, etc.).
+* `$value`: O valor para filtrar.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `andWhereIn(string $column, array $items)`
-Adiciona uma cláusula AND WHERE IN à query.
+Adiciona uma cláusula `where` à consulta.
 
-#### `whereNotIn(string $column, array $items)`
-Adiciona uma cláusula WHERE NOT IN à query.
+`whereBetween(string $column, string $start, string $end)`
 
-#### `rightJoin(mixed $table, string $leftSide, string $operator, string $rightSide)`
-Adiciona uma cláusula RIGHT JOIN à query.
+* `$column`: O nome da coluna para filtrar.
+* `$start`: O valor de início do intervalo.
+* `$end`: O valor de fim do intervalo.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `andWhereLike(string $column, $value)`
-Adiciona uma cláusula AND WHERE LIKE à query.
+Adiciona uma cláusula `where` à consulta que filtra em um intervalo de valores.
 
-#### `andWhereILike(string $column, string $value)`
-Adiciona uma cláusula AND WHERE ILIKE à query.
+`whereIn(string $column, array $values)`
 
-#### `orWhereLike(string $column, $value)`
-Adiciona uma cláusula OR WHERE LIKE à query.
+* `$column`: O nome da coluna para filtrar.
+* `$values`: Um array de valores para filtrar.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `orWhereILike(string $column, string $value)`
-Adiciona uma cláusula OR WHERE ILIKE à query.
+Adiciona uma cláusula `where` à consulta que filtra em um array de valores.
 
-#### `cutBindColumn(string $bindColumn)`
-Remove o prefixo da coluna para criar um nome de bind.
+`andWhere(string $column, string $operator, string $value)`
 
-#### `first()`
-Executa a query e retorna o primeiro resultado como um objeto.
+* `$column`: O nome da coluna para filtrar.
+* `$operator`: O operador a usar para o filtro (ex.: `=`, `>`, `<`, etc.).
+* `$value`: O valor para filtrar.
+* Retorna: A instância atual do construtor de consultas.
 
-#### `load($isValueable = false)`
-Executa a query e retorna todos os resultados. Se `$isValueable` for true, retorna apenas os valores.
+Adiciona uma cláusula `and where` à consulta.
 
-#### `getArrValues(array $array)`
-"Achata" um array multidimensional em um array unidimensional contendo apenas os valores.
+`orWhere(string $column, string $operator, string $value)`
 
-## Exemplo de Uso
+* `$column`: O nome da coluna para filtrar.
+* `$operator`: O operador a usar para o filtro (ex.: `=`, `>`, `<`, etc.).
+* `$value`: O valor para filtrar.
+* Retorna: A instância atual do construtor de consultas.
 
-```php
-<?php
-//redução de services, promovendo uma estrutura mais enxuta e ainda podendo realizar subQueries
-public static function getIdsFromIdFonteRecurso($idContaEntidade) 
-{
-    return (new W5IQueryBuilder("receita_orcamentaria", "unit_sipec"))
-    ->select(["id_fonterecurso"])
-    ->whereIn("id_fonterecurso", (
-        new W5IQueryBuilder("conta_entidade_fonte", "unit_sipec"))
-        ->select(["id_fonterecurso"])
-        ->where("id_contaentidade", "=", $idContaEntidade)
-        ->load(TRUE)
-        )
-    ->load();
-}
-````
+Adiciona uma cláusula `or where` à consulta.
 
-## Evitando sql injection...
+#### JOINS
 
-###`vai fazer o bind dos valores por baixo dos panos, abaixo um exemplo disto acontecendo`
+`innerJoin(string $table, string $rightSide, string $operator, string $leftSide)`
 
-````php
-/**
- * @summary : Adiciona clausula AND para fazer mais uma comparacao na query
- * @author : Lucas Cid <lucasfelipaaa@gmail.com>
- * @param : string $column : Coluna que vai ser comparada.
- * @param : string $operator : operador para realizar a comparacao.
- * @param : string $value : valor a ser comparado, mas não diretamente, mas sofendo bind posteriormente. 
- * @return : a propria classe...
- * 
-*/
-public function andWhere(string $column, string $operator, string $value)  
-{
-    $bind = $this->cutBindColumn($column);
+* `$table`: A tabela para juntar.
+* `$rightSide`: O lado direito da junção.
+* `$operator`: O operador a usar para a junção (ex.: `=`, `>`, `<`, etc.).
+* `$leftSide`: O lado esquerdo da junção.
+* Retorna: A instância atual do construtor de consultas.
 
-    //onde adiciona a bind e o valor correspondente no momento da insercao do where
-    $this->bindValues[]= [$bind => $value];
+Adiciona uma junção interna à consulta.
 
-    $this->query.= " AND " .$column. " ".$operator. " ". " :$bind ";
-    return $this;
-}
-````
-## Momento em que os valores sao relacionados aos seus respectivos "binds"
+`leftJoin(string $table, string $rightSide, string $operator, string $leftSide)`
 
-````php
+* `$table`: A tabela para juntar.
+* `$rightSide`: O lado direito da junção.
+* `$operator`: O operador a usar para a junção (ex.: `=`, `>`, `<`, etc.).
+* `$leftSide`: O lado esquerdo da junção.
+* Retorna: A instância atual do construtor de consultas.
 
-$stmt = $pdo->prepare($this->query);
-if(isset($this->bindValues) && is_array($this->bindValues) && !empty($this->bindValues)) 
-{
-    //adicionando os valores aos seus respectivos binds dentro do codigo sql gerado.
-    foreach($this->bindValues as $bind) 
-    {   
-        $key = array_key_first($bind);
-        $bindValue = $bind[$key];
-        $stmt->bindValue(":$key", $bindValue, is_numeric($bindValue) ? PDO::PARAM_INT : PDO::PARAM_STR);
-    }
-}
-$objects = $stmt->fetchObject(PDO::FETCH_OBJ);
-````
+Adiciona uma junção esquerda à consulta.
 
+`rightJoin(string $table, string $rightSide, string $operator, string $leftSide)`
+
+* `$table`: A tabela para juntar.
+* `$rightSide`: O lado direito da junção.
+* `$operator`: O operador a usar para a junção (ex.: `=`, `>`, `<`, etc.).
+* `$leftSide`: O lado esquerdo da junção.
+* Retorna: A instância atual do construtor de consultas.
+
+Adiciona uma junção direita à consulta.

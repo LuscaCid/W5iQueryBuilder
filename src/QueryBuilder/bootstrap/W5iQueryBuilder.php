@@ -248,7 +248,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author Lucas Cid
      * @return mixed
      */
-    public function getQuery()  :mixed
+    public function getQuery():mixed
     {
         return $this->toSql();
     }

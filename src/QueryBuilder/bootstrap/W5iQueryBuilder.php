@@ -13,6 +13,13 @@ use QueryBuilder\clauses\SelectClauses;
 use QueryBuilder\clauses\WhereClauses;
 use QueryBuilder\config\DataBaseSettings;
 
+    /**
+     * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
+     * @author : Lucas Felipe Lima Cid
+     * @created 07/06/2024
+     * @method mixed where(string $column, string|int|bool $value) 
+     * @method mixed where(string $column, string $operator, string|int|bool $value) 
+     */
 class W5iQueryBuilder extends BaseQuery 
 {
     private SelectClauses $selectClauses;
@@ -26,8 +33,8 @@ class W5iQueryBuilder extends BaseQuery
     private GroupByClauses $groupByClauses;
 
     /**
+     * @summary : Funcção construtora para utilização da classe e seus respectivos metodos. .
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
-     * @summary : Funcção construtora para utilização da classe e seus respectivos metodos, podendo ser .
      * @param array|string $tables : podendo ser null para que as tabelas possam ser passadas posteriormente no metodo "from", mas também podem ser passadas a(s) tabela(s) as quais sofrerão a consulta 
      * @param string $otherUnit : Outra unidade caso for necessario abrir outra transacao com outra base de dados. 
      */
@@ -231,13 +238,7 @@ class W5iQueryBuilder extends BaseQuery
     {
         return $this->toSql();
     }
-       /**
-     * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
-     * @author : Lucas Felipe Lima Cid
-     * @created 07/06/2024
-     * @method string where(string $column, string|int|bool $value) 
-     * @method string where3Args(string $column, string $operator, string|int|bool $value) 
-     */
+   
     public function __call($name, $arguments)
     {
         switch ($name)

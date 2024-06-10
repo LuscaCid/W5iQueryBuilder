@@ -11,7 +11,7 @@ class SelectClauses
     }
     public function select( array $columns)
     {
-        return array_merge($this->actualSelectArr, $columns);
+        return $this->actualSelectArr[] = array_merge($this->actualSelectArr, $columns);
     }
     public function selectCount(array $columns = NULL, $alias = NULL) 
     {
@@ -22,7 +22,6 @@ class SelectClauses
         $clausSentence = " COUNT($columnsImploded)" . $isSettedlias . " ";
 
         //a clausula count vai ser tratada como se fosse uma coluna
-        $this->actualSelectArr = array_merge($this->actualSelectArr, [$clausSentence]);
-        return $this->actualSelectArr;
+        return $this->actualSelectArr = array_merge($this->actualSelectArr, [$clausSentence]);
     }
 }

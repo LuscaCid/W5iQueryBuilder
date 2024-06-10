@@ -43,7 +43,7 @@ class W5iQueryBuilder extends BaseQuery
         }
         if (is_array($tables)) 
         {
-            $this->tables[] = array_merge($this->tables, $tables);
+            $this->tables = array_merge($this->tables, $tables);
         } else if (is_string($tables)) 
         {
             $this->tables[] = $tables;
@@ -83,27 +83,7 @@ class W5iQueryBuilder extends BaseQuery
         return $this;
     }
 
-    /**
-     * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
-     * @author : Lucas Felipe Lima Cid
-     * @created 07/06/2024
-     */
-    public function __call($name, $arguments)
-    {
-        switch ($name)
-        {
-            case 'where':
-                switch (count($arguments)) 
-                {
-                    case 2:
-                        $this->where[] = $this->whereClauses->where($arguments[0], $arguments[1]);
-                        return $this;
-                    case 3:
-                        $this->where[]= $this->whereClauses->where3Args($arguments[0], $arguments[1], $arguments[2]);
-                        return $this;
-                }
-        } 
-    }    
+ 
     public function whereBetween($column, $start, $end) 
     {
         $this->where[] = $this->whereClauses->whereBetween($column, $start, $end);
@@ -159,22 +139,22 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->orWhereILike($column, $value);
         return $this;
     }
-    public function andWhere(string $column, string $operator, string $value)
+    public function andWhere(string $column, string $operator, mixed $value)
     {
         $this->where[] = $this->whereClauses->andWhere($column, $operator, $value);
         return $this;
     }
-    public function orWhere(string $column, string $operator, string $value) 
+    public function orWhere(string $column, string $operator, mixed $value) 
     {
         $this->where[] = $this->whereClauses->orWhere($column, $operator, $value);
         return $this;
     }
-    public function andWhereIn (string $column, array $value) 
+    public function andWhereIn (string $column, array|null $value) 
     {
         $this->where[] = $this->where[]=$this->whereClauses->andWhereIn($column, $value);
         return $this;
     }
-    public function orWhereIn (string $column, array $value) 
+    public function orWhereIn (string $column, array|null $value) 
     {
        $this->where[] = $this->whereClauses->orWhereIn($column, $value);
         return $this;
@@ -204,12 +184,12 @@ class W5iQueryBuilder extends BaseQuery
         return $this;
     }
     
-    public function leftJoin(string $table, string $operator, string $rightSide ,string $leftSide) 
+    public function leftJoin(string $table, string $rightSide, string $operator ,string $leftSide) 
     {
         $this->join[] = $this->joinClauses->leftJoin($table, $rightSide ,$operator, $leftSide);
         return $this;
     }
-    public function rightJoin(string $table, string $operator, string $rightSide ,string $leftSide) 
+    public function rightJoin(string $table, string $rightSide, string $operator ,string $leftSide) 
     {
         $this->join[] = $this->joinClauses->rightJoin($table, $rightSide ,$operator, $leftSide);
         return $this;
@@ -250,4 +230,25 @@ class W5iQueryBuilder extends BaseQuery
     {
         return $this->toSql();
     }
+       /**
+     * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
+     * @author : Lucas Felipe Lima Cid
+     * @created 07/06/2024
+     */
+    public function __call($name, $arguments)
+    {
+        switch ($name)
+        {
+            case 'where':
+                switch (count($arguments)) 
+                {
+                    case 2:
+                        $this->where[] = $this->whereClauses->where($arguments[0], $arguments[1]);
+                        return $this;
+                    case 3:
+                        $this->where[]= $this->whereClauses->where3Args($arguments[0], $arguments[1], $arguments[2]);
+                        return $this;
+                }
+        } 
+    }    
 }

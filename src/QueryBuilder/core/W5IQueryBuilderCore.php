@@ -52,7 +52,23 @@ abstract class W5IQueryBuilderCore
                 {   
                     $key = array_key_first($bind);
                     $bindValue = $bind[$key];
-                    $stmt->bindValue(":$key", $bindValue, is_numeric($bindValue) ? PDO::PARAM_INT : PDO::PARAM_STR);
+                    
+                    switch (gettype($bindValue)) 
+                    {
+                        case "boolean":
+                            $paramType = PDO::PARAM_BOOL;
+                            break;
+                        case "string":
+                            $paramType = PDO::PARAM_STR;
+                            break;
+                        case "integer":
+                            $paramType = PDO::PARAM_INT;
+                            break;
+                        default:
+                            $paramType = PDO::PARAM_STR;
+                    }
+
+                    $stmt->bindValue(":$key", $bindValue, $paramType);
                 }
             }
             $stmt->execute(!empty($this->placeholderValues)? $this->placeholderValues : NULL);
@@ -115,7 +131,23 @@ abstract class W5IQueryBuilderCore
                 {   
                     $key = array_key_first($bind);
                     $bindValue = $bind[$key];
-                    $stmt->bindValue(":$key", $bindValue, is_numeric($bindValue) ? PDO::PARAM_INT : PDO::PARAM_STR);
+                    
+                    switch (gettype($bindValue)) 
+                    {
+                        case "boolean":
+                            $paramType = PDO::PARAM_BOOL;
+                            break;
+                        case "string":
+                            $paramType = PDO::PARAM_STR;
+                            break;
+                        case "integer":
+                            $paramType = PDO::PARAM_INT;
+                            break;
+                        default:
+                            $paramType = PDO::PARAM_STR;
+                    }
+
+                    $stmt->bindValue(":$key", $bindValue, $paramType);
                 }
             }
             $stmt->execute(!empty($this->placeholderValues) ? $this->placeholderValues : NULL);

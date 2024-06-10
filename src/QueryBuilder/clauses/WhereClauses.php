@@ -68,7 +68,7 @@ class WhereClauses
         
         return "  $column IN ( $placeholders ) ";
     }
-    public function andWhereIn(string $column, array $items) 
+    public function andWhereIn(string $column, array|null $items) 
     {
         $items = empty($items) ? [0] : $items;
 
@@ -78,7 +78,7 @@ class WhereClauses
         
         return " AND $column IN ( $placeholders ) ";
     }
-    public function orWhereIn(string $column, array $items) 
+    public function orWhereIn(string $column, array|null $items) 
     {
         $items = empty($items) ? [0] : $items;
 
@@ -88,7 +88,7 @@ class WhereClauses
         
         return " OR $column IN ( $placeholders ) ";
     }
-    public function andWhereNotIn(string $column, array $items) 
+    public function andWhereNotIn(string $column, array|null $items) 
     {
         $items = empty($items) ? [0] : $items;
 
@@ -98,7 +98,7 @@ class WhereClauses
         
         return " AND $column NOT IN ( $placeholders ) ";
     }
-    public function orWhereNotIn(string $column, array $items) 
+    public function orWhereNotIn(string $column, array|null $items) 
     {
         $items = empty($items) ? [0] : $items;
 
@@ -108,7 +108,7 @@ class WhereClauses
         
         return " OR $column NOT IN ( $placeholders ) ";
     }
-    public function whereNotIn(string $column, array $items) 
+    public function whereNotIn(string $column, array|null $items) 
     {
         $items = empty($items) ? [0] : $items;
 
@@ -118,7 +118,7 @@ class WhereClauses
         
         return "  $column NOT IN ( $placeholders ) ";
     }
-    public function andWhere(string $column, string $operator, string|int $value)  
+    public function andWhere(string $column, string $operator, string|int|bool $value)  
     {
         $bind = $this->cutBindColumn($column);
 
@@ -126,7 +126,7 @@ class WhereClauses
 
         return " AND " .$column. " ".$operator. " ". " :$bind ";
     }
-    public function orWhere(string $column, string $operator, string|int $value) 
+    public function orWhere(string $column, string $operator, string|int|bool $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -134,7 +134,7 @@ class WhereClauses
 
         return " OR ". " $column " .$operator. " ". " :$bind ";
     }
-    public function where(string $column, string $value) 
+    public function where(string $column, string|int|bool $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -142,7 +142,7 @@ class WhereClauses
 
         return " ".$column." = ".":$bind" ." ";
     }
-    public function andWhereLike (string $column, string|int $value) 
+    public function andWhereLike (string $column, string|int|bool $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -151,7 +151,7 @@ class WhereClauses
         return " AND ".$column." LIKE " . " :$bind ";
 
     }
-    public function andWhereILike (string $column, string|int $value) 
+    public function andWhereILike (string $column, string|int|bool $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -161,7 +161,7 @@ class WhereClauses
 
     }
 
-    public function orWhereLike (string $column, string|int $value) 
+    public function orWhereLike (string $column, string|int|bool $value) 
     {
         $bind = $this->cutBindColumn($column);
 
@@ -170,7 +170,7 @@ class WhereClauses
         return " OR ".$column." LIKE " . " :$bind ";
 
     }
-    public function orWhereILike (string $column, string $value) 
+    public function orWhereILike (string $column, string|int|bool $value) 
     {
         $bind = $this->cutBindColumn($column);
 

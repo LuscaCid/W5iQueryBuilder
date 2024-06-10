@@ -4,17 +4,17 @@ use QueryBuilder\bootstrap\W5iQueryBuilder;
 
 include "../vendor/autoload.php";
 
-$resultsFromSipec = (new W5iQueryBuilder("receita_orcamentaria", "sipec"))
-    ->select(["id_fonterecurso"])
-    ->whereIn("id_fonterecurso", (
-        new W5iQueryBuilder("conta_entidade_fonte"))
-        ->select(["id_fonterecurso"])
-        ->where("id_contaentidade",22)
-        ->load(TRUE)
-        )
-    ->load();
+// $resultsFromSipec = (new W5iQueryBuilder("receita_orcamentaria", "sipec"))
+//     ->select(["id_fonterecurso"])
+//     ->whereIn("id_fonterecurso", (
+//         new W5iQueryBuilder("conta_entidade_fonte"))
+//         ->select(["id_fonterecurso"])
+//         ->where("id_contaentidade",22)
+//         ->load(TRUE)
+//         )
+//     ->load();
 
-var_dump($resultsFromSipec) ;
+// var_dump($resultsFromSipec) ;
 
 //  $resultsFromRelatorioLocal = (
 //     new W5iQueryBuilder("relatorio AS r", self::RELATORIO_UNIT)
@@ -56,9 +56,7 @@ var_dump($resultsFromSipec) ;
 //     ->where('ro.id_criterioreceita', '<>', 2)
 //     ->load();
 
-
 // var_dump($test);
-
 
 // $countTest = (
 //     new W5IQueryBuilder("relatorio", "relatorio_local")
@@ -67,3 +65,28 @@ var_dump($resultsFromSipec) ;
 // ->first();
 
 // var_dump($countTest);
+
+function service () 
+{
+    return (
+        new W5iQueryBuilder(["setor as s"], "patrimonio_dados")
+        )
+        ->select([
+            "s.cd_setor",
+            "s.id_setor",
+            "s.nm_setor",
+            "s.nm_complemento",
+            "s.nm_bairro",
+            "s.nm_localidade",
+            "s.nm_uf",
+            "m.nm_membro"
+        ])
+        ->leftJoin("membro as m", "m.id_membro", "=", "s.id_membroresponsavel")
+        ->where("s.fl_desativado", false)
+        ->andWhereILike("s.cd_setor", 'set001')
+        ->load();
+}
+
+$data = service();
+
+var_dump($data);

@@ -11,6 +11,6 @@ class GroupByClauses
     }
     public function groupBy(array $groupByItems)
     {
-        $this->groupByItems[] = array_merge($this->groupByItems ,$groupByItems);
+        return $this->groupByItems[] = array_merge($this->groupByItems ,$groupByItems);
     }
 }

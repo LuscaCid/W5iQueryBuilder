@@ -4,8 +4,13 @@ namespace QueryBuilder\clauses;
 
 class GroupByClauses
 {
-    public function groupBy(array $orderByItems, array $newColumns)
+    private array|null $groupByItems;
+    public function __construct(array|null &$groupByItems)
     {
-        return array_merge($orderByItems, $newColumns);
+        $this->groupByItems = &$groupByItems;
+    }
+    public function groupBy(array $groupByItems)
+    {
+        $this->groupByItems[] = array_merge($this->groupByItems ,$groupByItems);
     }
 }

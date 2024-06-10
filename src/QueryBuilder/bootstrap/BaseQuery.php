@@ -6,8 +6,8 @@ use QueryBuilder\core\W5IQueryBuilderCore;
 
 abstract class BaseQuery extends W5IQueryBuilderCore
 {
-    protected $select = [];
-    protected $tables = [];
+    protected $select;
+    protected $tables;
     protected $where = [];
     protected $having = [];
     protected $join = [];
@@ -19,11 +19,21 @@ abstract class BaseQuery extends W5IQueryBuilderCore
 
     
     protected function buildSelect() {
-        return empty($this->select) ? '*' : implode(', ', $this->select);
+        if(isset($this->select) && empty($this->select)) 
+        {
+            return " SELECT * ";
+        } 
+        else if (isset($this->select) && !empty($this->select)) 
+        {
+            return " SELECT " . implode(', ', $this->select). " ";
+        }
     }
     protected function buildFrom() 
     {
-        return  implode(",", $this->tables);
+        if(isset($this->tables) && !empty($this->tables)) 
+        {
+            return " FROM ". implode(",", $this->tables);
+        }
     }
     /**
      * @summary : Metodo que vai retornar todos os 'wheres' formatados, evitando problemas como a passagem de um and sem um where anteriormente
@@ -41,6 +51,18 @@ abstract class BaseQuery extends W5IQueryBuilderCore
                 
                 $contains = str_contains(strtoupper($condition), " AND ") || str_contains(strtoupper($condition), " OR ") ? TRUE : FALSE;
 
+                if($contains && $index == 0) 
+                {
+                    if(str_contains(strtoupper($condition), " AND ")) 
+                    {
+                        $condition = str_replace("AND", "", $condition);
+                    }
+                    else if (str_contains(strtoupper($condition), " OR ")) 
+                    {
+                        $condition = str_replace("OR", "WHERE", $condition);
+                    }
+                    $whereClausesFormatted[] = " " . $condition . " ";
+                }
                 if(!$contains && $index > 0) 
                 {
                     $whereClausesFormatted[] = " AND " . $condition . " ";
@@ -78,15 +100,15 @@ abstract class BaseQuery extends W5IQueryBuilderCore
     }
 
     protected function toSql() {
-        $sql  = ' SELECT ' . $this->buildSelect();
-        $sql .= ' FROM ' . $this->buildFrom();
-        $sql .= ' ' .      $this->buildJoin();
-        $sql .= ' '      . $this->buildWhere();
-        $sql .= ' ' .      $this->buildGroupBy();
-        $sql .= ' ' .      $this->buildHaving();
-        $sql .= ' ' .      $this->buildOrderBy();
-        $sql .= ' ' .      $this->buildLimit();
-        $sql .= ' ' .      $this->buildOffset();
+        $sql  = ' ' . $this->buildSelect();
+        $sql .= ' ' . $this->buildFrom();
+        $sql .= ' ' . $this->buildJoin();
+        $sql .= ' ' . $this->buildWhere();
+        $sql .= ' ' . $this->buildGroupBy();
+        $sql .= ' ' . $this->buildHaving();
+        $sql .= ' ' . $this->buildOrderBy();
+        $sql .= ' ' . $this->buildLimit();
+        $sql .= ' ' . $this->buildOffset();
 
         return $sql;
     }

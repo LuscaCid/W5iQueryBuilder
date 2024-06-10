@@ -43,6 +43,7 @@ class W5iQueryBuilder extends BaseQuery
         }
         if (is_array($tables)) 
         {
+            $this->tables = [];
             $this->tables = array_merge($this->tables, $tables);
         } else if (is_string($tables)) 
         {
@@ -55,8 +56,8 @@ class W5iQueryBuilder extends BaseQuery
         $this->limitClauses   = new LimitClauses($this->bindValues);
         $this->offsetClauses  = new OffsetClauses($this->bindValues);
         $this->orderByClauses = new OrderByClauses($this->orderByItems);
+        $this->groupByClauses = new GroupByClauses($this->groupByItems);
         $this->joinClauses    = new JoinClauses();
-        $this->groupByClauses = new GroupByClauses();
     }
     public function select(array $columns) 
     {   
@@ -79,7 +80,7 @@ class W5iQueryBuilder extends BaseQuery
     }
     public function groupBy(array $columns)
     {
-        $this->groupByItems[] = $this->groupByClauses->groupBy($this->groupByItems, $columns); 
+        $this->groupByItems = $this->groupByClauses->groupBy($columns); 
         return $this;
     }
 
@@ -234,6 +235,8 @@ class W5iQueryBuilder extends BaseQuery
      * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
      * @author : Lucas Felipe Lima Cid
      * @created 07/06/2024
+     * @method string where(string $column, string|int|bool $value) 
+     * @method string where3Args(string $column, string $operator, string|int|bool $value) 
      */
     public function __call($name, $arguments)
     {

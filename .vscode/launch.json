@@ -9,7 +9,7 @@
                 "-dxdebug.start_with_request=yes",
                 "-S",
                 "localhost:8003",
-                "-t public",
+                "",
                 "."
             ],
             "program": "",

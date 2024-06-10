@@ -4,13 +4,14 @@ namespace QueryBuilder\clauses;
 
 class FromClauses
 {
-    private array $actualTables;
-    public function __construct(array &$actualTables) 
+    private array|null $actualTables;
+    public function __construct(array|null &$actualTables) 
     {
         $this->actualTables = &$actualTables;
     }
     public function from(array $newTables)
     {
-       return $this->actualTables[] =  $newTables;
+        $this->actualTables = [];
+        return $this->actualTables[] =  $newTables;
     }
 }

@@ -4,13 +4,14 @@ namespace QueryBuilder\clauses;
 
 class SelectClauses
 {
-    private array $actualSelectArr = [];
-    public function __construct(array &$actualSelectArr)
+    private array|NULL $actualSelectArr = [];
+    public function __construct(array|NULL &$actualSelectArr)
     {
         $this->actualSelectArr = &$actualSelectArr;        
     }
-    public function select( array $columns)
+    public function select(array $columns)
     {
+        $this->actualSelectArr = [];
         return $this->actualSelectArr[] = array_merge($this->actualSelectArr, $columns);
     }
     public function selectCount(array $columns = NULL, $alias = NULL) 

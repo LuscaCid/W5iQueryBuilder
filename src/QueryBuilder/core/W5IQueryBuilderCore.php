@@ -13,8 +13,6 @@ abstract class W5IQueryBuilderCore
     private bool $isAdiantiFrameworkProject ;
     protected array $placeholderValues = [];
     protected array $bindValues = [] ; 
-    protected array $placeholders = [] ;
-    protected string $tableName;
     
     /**
      * @summary : carrega finalmente a query montada anteriormente, podendo ser tanto num ambiente com adianti ou sem...

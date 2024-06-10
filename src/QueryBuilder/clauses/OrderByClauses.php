@@ -2,12 +2,15 @@
 
 namespace QueryBuilder\clauses;
 
-use QueryBuilder\bootstrap\BaseQuery;
-
-class OrderByClauses extends BaseQuery
+class OrderByClauses
 {
+    private array $orderByItems;
+    public function __construct(array &$orderByItems)
+    {
+        $this->orderByItems = &$orderByItems;
+    }
     public function orderBy(array $columns)
     {
-        return array_merge($this->orderByItems, $columns);
+        return $this->orderByItems[] = $columns;
     }
 }

@@ -54,12 +54,10 @@ class W5iQueryBuilder extends BaseQuery
         $this->havingClauses  = new HavingClauses($this->bindValues, $this->placeholderValues);
         $this->limitClauses   = new LimitClauses($this->bindValues);
         $this->offsetClauses  = new OffsetClauses($this->bindValues);
+        $this->orderByClauses = new OrderByClauses($this->orderByItems);
         $this->joinClauses    = new JoinClauses();
-        $this->orderByClauses = new OrderByClauses();
         $this->groupByClauses = new GroupByClauses();
     }
-    
-    
     public function select(array $columns) 
     {   
         $this->select = $this->selectClauses->select($columns);
@@ -219,7 +217,7 @@ class W5iQueryBuilder extends BaseQuery
     public function orderBy(array $columns, $direction = 'ASC') 
     {
         $this->orderByDirection = $direction;
-        $this->orderByItems[] = $this->orderByClauses->orderBy($columns);
+        $this->orderByItems = $this->orderByClauses->orderBy($columns);
         return $this;
     }
 

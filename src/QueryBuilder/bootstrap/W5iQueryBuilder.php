@@ -74,7 +74,7 @@ class W5iQueryBuilder extends BaseQuery
     }
     public function from(array $tables) 
     {
-        $this->tables[] = $this->fromClauses->from($tables);
+        $this->tables = $this->fromClauses->from($tables);
         return $this;   
     }
     public function groupBy(array $columns)

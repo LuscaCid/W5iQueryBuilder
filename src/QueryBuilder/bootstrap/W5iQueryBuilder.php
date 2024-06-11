@@ -66,9 +66,10 @@ class W5iQueryBuilder extends BaseQuery
         $this->groupByClauses = new GroupByClauses($this->groupByItems);
         $this->joinClauses    = new JoinClauses();
     }
-    public function select(array $columns) 
+    public function select(array|null $columns = NULL) 
     {   
-        $this->select = $this->selectClauses->select($columns);
+        //somente na chaada será possivel obter todos os itens sem necessariamente passar '["*]'
+        $this->select = $this->selectClauses->select($columns ? $columns : ["*"]);
         return $this;
     }
     /**

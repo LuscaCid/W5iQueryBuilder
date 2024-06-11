@@ -93,10 +93,19 @@ include "../vendor/autoload.php";
 
 // var_dump($data);
 
-$selectCountPlusSelect = (new W5iQueryBuilder("relatorio", "relatorio_local"))
-    ->select(["id_relatorio", "nm_relatorio"])
-    ->selectCount(["id_relatorio"], "quantidade")
-    ->groupBy(["id_relatorio"])
-    ->load();
+// $selectCountPlusSelect = (new W5iQueryBuilder("relatorio", "relatorio_local"))
+//     ->select(["id_relatorio", "nm_relatorio"])
+//     ->selectCount(["id_relatorio"], "quantidade")
+//     ->groupBy(["id_relatorio"])
+//     ->load();
 
-var_dump($selectCountPlusSelect);
+// var_dump($selectCountPlusSelect);
+
+
+$test = (new W5iQueryBuilder("relatorio", "relatorio_local"))
+   ->select()
+   ->selectCount(["id_relatorio"], "quantidade")
+   ->groupBy(["id_relatorio"])
+   ->load();
+
+   var_dump($test);

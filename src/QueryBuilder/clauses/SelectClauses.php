@@ -16,6 +16,8 @@ class SelectClauses
     }
     public function selectCount(array $columns = NULL, $alias = NULL) 
     {
+        $this->actualSelectArr = [];
+
         $columnsImploded = is_array($columns) ? implode(",", $columns) : "*";
 
         $isSettedlias = isset($alias) ? " AS ". $alias : " ";

@@ -13,13 +13,13 @@ use QueryBuilder\clauses\SelectClauses;
 use QueryBuilder\clauses\WhereClauses;
 use QueryBuilder\config\DataBaseSettings;
 
-/**
- * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
- * @author : Lucas Felipe Lima Cid
- * @created 07/06/2024
- * @method mixed where(string $column, string|int|bool $value) 
- * @method mixed where(string $column, string $operator, string|int|bool $value) 
- */
+    /**
+     * @summary : possiveis chamadas para o where, caso apenas dois argumentos, o código irá subentender que será passado para uma comparação de igualdade
+     * @author : Lucas Felipe Lima Cid
+     * @created 07/06/2024
+     * @method mixed where(string $column, string|int|bool $value) 
+     * @method mixed where(string $column, string $operator, string|int|bool $value) 
+     */
 class W5iQueryBuilder extends BaseQuery 
 {
     private SelectClauses $selectClauses;
@@ -33,10 +33,10 @@ class W5iQueryBuilder extends BaseQuery
     private GroupByClauses $groupByClauses;
 
     /**
-     * @summary : Funcção construtora para utilização da classe e seus respectivos metodos.
+     * @summary : Funcção construtora para utilização da classe e seus respectivos metodos. .
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array|string $tables : podendo ser null para que as tabelas possam ser passadas posteriormente no metodo "from", mas também podem ser passadas a(s) tabela(s) as quais sofrerão a consulta 
-     * @param string $otherUnit : Outra unidade caso for necessario abrir outra transacao com outra base de dados.
+     * @param string $otherUnit : Outra unidade caso for necessario abrir outra transacao com outra base de dados. 
      */
     public function __construct(mixed $tables = NULL, string $otherUnit = NULL)
     {
@@ -66,7 +66,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->groupByClauses = new GroupByClauses($this->groupByItems);
         $this->joinClauses    = new JoinClauses();
     }
-
+    
     /**
      * @summary : Seleciona colunas especificadas ou todas se não especificadas.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
@@ -75,11 +75,10 @@ class W5iQueryBuilder extends BaseQuery
      */
     public function select(array|null $columns = NULL) 
     {   
-        //somente na chamada será possível obter todos os itens sem necessariamente passar '["*]'
+        //somente na chaada será possivel obter todos os itens sem necessariamente passar '["*]'
         $this->select = $this->selectClauses->select($columns ? $columns : ["*"]);
         return $this;
     }
-
     /**
      * @summary : Seleciona contagem de colunas especificadas com alias opcional.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
@@ -92,8 +91,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->select = $this->selectClauses->selectCount($columns, $alias);
         return $this;
     }
-
-    /**
+     /**
      * @summary : Define a tabela de origem para a consulta.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array $tables
@@ -104,7 +102,6 @@ class W5iQueryBuilder extends BaseQuery
         $this->tables = $this->fromClauses->from($tables);
         return $this;   
     }
-
     /**
      * @summary : Adiciona cláusulas GROUP BY à consulta.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
@@ -116,8 +113,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->groupByItems = $this->groupByClauses->groupBy($columns); 
         return $this;
     }
-
-    /**
+       /**
      * @summary : Adiciona cláusula WHERE BETWEEN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -130,8 +126,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->whereBetween($column, $start, $end);
         return $this;
     }
-
-    /**
+     /**
      * @summary : Adiciona cláusula AND WHERE BETWEEN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -144,7 +139,6 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->andWhereBetween($column, $start, $end);
         return $this;
     }
-
     /**
      * @summary : Adiciona cláusula OR WHERE BETWEEN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
@@ -158,7 +152,6 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->orWhereBetween($column, $start, $end);
         return $this;
     }
-
     /**
      * @summary : Adiciona cláusula WHERE IN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
@@ -171,8 +164,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->whereIn($column, $values);
         return $this;
     }
-
-    /**
+     /**
      * @summary : Adiciona cláusula WHERE NOT IN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -184,8 +176,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->whereNotIn($column, $values);
         return $this;
     }
-
-    /**
+      /**
      * @summary : Adiciona cláusula AND WHERE NOT IN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -197,8 +188,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->andWhereNotIn($column, $values);
         return $this;
     }
-
-    /**
+        /**
      * @summary : Adiciona cláusula OR WHERE NOT IN.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -210,8 +200,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->orWhereNotIn($column, $values);
         return $this;
     }
-
-    /**
+        /**
      * @summary : Adiciona cláusula AND WHERE LIKE.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -223,7 +212,6 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->andWhereLike($column, $value);
         return $this;
     }
-
     /**
      * @summary : Adiciona cláusula AND WHERE ILIKE.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
@@ -236,8 +224,7 @@ class W5iQueryBuilder extends BaseQuery
         $this->where[] = $this->whereClauses->andWhereILike($column, $value);
         return $this;
     }
-
-    /**
+     /**
      * @summary : Adiciona cláusula OR WHERE LIKE.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
@@ -501,5 +488,5 @@ class W5iQueryBuilder extends BaseQuery
                         return $this;
                 }
         } 
-    }    
+    }   
 }

@@ -52,7 +52,8 @@ class W5iQueryBuilder extends BaseQuery
         {
             $this->tables = [];
             $this->tables = array_merge($this->tables, $tables);
-        } else if (is_string($tables)) 
+        }
+        else if (is_string($tables)) 
         {
             $this->tables[] = $tables;
         }
@@ -71,7 +72,7 @@ class W5iQueryBuilder extends BaseQuery
      * @summary : Seleciona colunas especificadas ou todas se não especificadas.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array|null $columns
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function select(array|null $columns = NULL) 
     {   
@@ -84,7 +85,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array $columns
      * @param string $alias
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function selectCount(array $columns = NULL, string $alias = NULL) 
     {
@@ -95,7 +96,7 @@ class W5iQueryBuilder extends BaseQuery
      * @summary : Define a tabela de origem para a consulta.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array $tables
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function from(array $tables) 
     {
@@ -106,7 +107,7 @@ class W5iQueryBuilder extends BaseQuery
      * @summary : Adiciona cláusulas GROUP BY à consulta.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array $columns
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function groupBy(array $columns)
     {
@@ -119,7 +120,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $column
      * @param mixed $start
      * @param mixed $end
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function whereBetween($column, $start, $end) 
     {
@@ -132,7 +133,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $column
      * @param mixed $start
      * @param mixed $end
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function andWhereBetween($column, $start, $end) 
     {
@@ -145,7 +146,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $column
      * @param mixed $start
      * @param mixed $end
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orWhereBetween($column, $start, $end) 
     {
@@ -157,7 +158,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array|null $values
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function whereIn($column, array|null $values) 
     {
@@ -169,7 +170,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array|null $values
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function whereNotIn($column,  array|null $values) 
     {
@@ -181,7 +182,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array|null $values
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function andWhereNotIn(string $column, array|null  $values) 
     {
@@ -193,7 +194,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array|null $values
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orWhereNotIn(string $column, array|null  $values) 
     {
@@ -205,7 +206,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param mixed $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function andWhereLike(string $column, mixed $value) 
     {
@@ -217,7 +218,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param mixed $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function andWhereILike(string $column, mixed $value)  
     {
@@ -229,7 +230,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param mixed $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orWhereLike(string $column, mixed $value)  
     {
@@ -242,7 +243,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param mixed $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orWhereILike(string $column, mixed $value) 
     {
@@ -256,7 +257,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $column
      * @param string $operator
      * @param mixed $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function andWhere(string $column, string $operator, mixed $value)
     {
@@ -270,7 +271,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $column
      * @param string $operator
      * @param mixed $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orWhere(string $column, string $operator, mixed $value) 
     {
@@ -283,7 +284,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array|null $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function andWhereIn (string $column, array|null $value) 
     {
@@ -296,7 +297,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array|null $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orWhereIn (string $column, array|null $value) 
     {
@@ -310,7 +311,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $column
      * @param string $operator
      * @param string $value
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function having(string $column, string $operator, string $value) {
         $this->having[] = $this->havingClauses->having($column, $operator, $value);
@@ -322,7 +323,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param string $column
      * @param array $items
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function havingIn(string $column, array $items) 
     {
@@ -342,7 +343,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $rightSide
      * @param string $operator
      * @param string $leftSide
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function innerJoin(string $table, string $rightSide, string $operator, string $leftSide) 
     {
@@ -357,7 +358,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $rightSide
      * @param string $operator
      * @param string $leftSide
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function join(string $table, string $rightSide, string $operator, string $leftSide) 
     {
@@ -372,7 +373,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $rightSide
      * @param string $operator
      * @param string $leftSide
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function leftJoin(string $table, string $rightSide, string $operator ,string $leftSide) 
     {
@@ -387,7 +388,7 @@ class W5iQueryBuilder extends BaseQuery
      * @param string $rightSide
      * @param string $operator
      * @param string $leftSide
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function rightJoin(string $table, string $rightSide, string $operator ,string $leftSide) 
     {
@@ -400,7 +401,7 @@ class W5iQueryBuilder extends BaseQuery
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param array $columns
      * @param string $direction
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function orderBy(array $columns, $direction = 'ASC') 
     {
@@ -413,7 +414,7 @@ class W5iQueryBuilder extends BaseQuery
      * @summary : Adiciona cláusula LIMIT.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param int $limit
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function limit($limit) 
     {
@@ -425,7 +426,7 @@ class W5iQueryBuilder extends BaseQuery
      * @summary : Adiciona cláusula OFFSET.
      * @author : Lucas Felipe Lima Cid <lucasfelipaaa@gmail.com>
      * @param int $offset
-     * @return self
+     * @return W5iQueryBuilder
      */
     public function offset($offset) 
     {
